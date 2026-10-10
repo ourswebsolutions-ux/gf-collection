@@ -32,7 +32,6 @@ export function toAdminProductForm(product) {
     price: money(product.price),
     salePrice: money(product.salePrice) ?? "",
     featured: product.featured,
-    newArrival: product.newArrival,
     bestSeller: product.bestSeller,
     onSale: product.onSale,
     seoTitle: product.seoTitle ?? "",
@@ -56,6 +55,7 @@ export function toCategoryOptions(tree) {
   return tree.map((department) => ({
     id: department.id,
     name: department.name,
+    slug: department.slug,
     status: department.status,
     children: department.children.map((child) => ({ id: child.id, name: child.name, status: child.status })),
   }));

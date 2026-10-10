@@ -1,10 +1,15 @@
 // Structural seed — safe to run repeatedly (`npm run db:seed`).
 //
-// Creates ONLY the category structure needed to start working:
-//   departments (Men, Women, Kids, Accessories) + initial subcategories,
-//   and Urdu/Hindi names for departments and subcategories.
-// Existing rows are never overwritten (upsert with an empty update), so later
-// edits made by admins survive re-seeding.
+// Creates ONLY the category structure of the GF Collection Women + Girls store:
+//   Women        → Fancy / Party Wear, Casual Dresses
+//   Girls / Kids → Girls' Fancy / Party Wear, Girls' Casual Dresses
+// with Urdu/Hindi names. The store sells women's and girls' dresses only. Existing rows are never overwritten (upsert with an empty
+// update), so later edits made by admins survive re-seeding.
+//
+// Categories that do not belong to this store (listed in LEGACY_SLUGS: Men, Boys, the
+// mixed "Kids" department, Accessories, Women → Tops…) are RETIRED, not deleted: they are set to HIDDEN so they leave the storefront
+// while their products, order history and customer accounts stay intact. Categories
+// created by admins are never touched. Run with `-- --keep-legacy` to skip this step.
 //
 // It never creates products, customers, orders, reviews or sales.
 // Optional admin bootstrap: set SEED_ADMIN_EMAIL + SEED_ADMIN_PASSWORD
@@ -14,52 +19,41 @@ import { disconnectDb, getDb } from "../src/lib/db.js";
 import { newPasswordSchema } from "../src/lib/validation/schemas/auth.js";
 import { emailSchema, personNameSchema } from "../src/lib/validation/schemas/common.js";
 
+const KEEP_LEGACY = process.argv.includes("--keep-legacy");
+
+// Category slugs of the previous (men / women / kids / accessories) catalogue, and of the
+// interim mixed Kids department (girls + boys) that this store replaced with Girls / Kids.
+const LEGACY_SLUGS = [
+  "men", "men-t-shirts", "men-shirts", "men-hoodies", "men-jackets", "men-pants", "men-trousers", "men-tracksuits",
+  "women-dresses", "women-tops", "women-shirts", "women-hoodies", "women-jackets", "women-pants", "women-tracksuits",
+  "kids", "kids-t-shirts", "kids-shirts", "kids-hoodies", "kids-pants", "kids-tracksuits",
+  "kids-girls-party-wear", "kids-girls-casual", "kids-boys-party-wear", "kids-boys-casual",
+  "accessories", "bags", "handbags", "perfumes", "watches", "fashion-accessories",
+];
+
 const STRUCTURE = [
-  {
-    name: "Men",
-    slug: "men",
-    translations: { ur: "مرد", hi: "पुरुष" },
-    children: ["T-Shirts", "Shirts", "Hoodies", "Jackets", "Pants", "Trousers", "Tracksuits"],
-  },
   {
     name: "Women",
     slug: "women",
+    description: "Fancy and party wear dresses, and elegant casual dresses.",
     translations: { ur: "خواتین", hi: "महिलाएँ" },
-    children: ["Dresses", "Tops", "Shirts", "Hoodies", "Jackets", "Pants", "Tracksuits"],
+    children: [
+      { name: "Fancy / Party Wear", slug: "women-fancy-party-wear", description: "Party, formal, wedding and evening wear — gowns, lehengas and occasion dresses.", translations: { ur: "فینسی / پارٹی وئیر", hi: "फ़ैंसी / पार्टी वियर" } },
+      // `previousNames`: names an earlier seed used — renamed once to the current name, admin renames are kept.
+      { name: "Casual Dresses", slug: "women-casual", previousNames: ["Casual"], description: "Everyday and modern casual dresses made for comfort.", translations: { ur: "کیژول ڈریسز", hi: "कैज़ुअल ड्रेसेज़" } },
+    ],
   },
   {
-    name: "Kids",
-    slug: "kids",
-    translations: { ur: "بچے", hi: "बच्चे" },
-    children: ["T-Shirts", "Shirts", "Hoodies", "Pants", "Tracksuits"],
-  },
-  {
-    name: "Accessories",
-    slug: "accessories",
-    translations: { ur: "لوازمات", hi: "एक्सेसरीज़" },
-    // Accessory slugs are unprefixed: they back /collections/bags, /collections/watches…
-    children: ["Bags", "Hand Bags", "Perfumes", "Watches", "Fashion Accessories"],
-    unprefixed: true,
+    name: "Girls / Kids",
+    slug: "girls",
+    description: "Party, fancy and casual dresses for girls aged 2 to 12.",
+    translations: { ur: "بچیاں", hi: "बच्चियाँ" },
+    children: [
+      { name: "Girls' Fancy / Party Wear", slug: "girls-fancy-party-wear", description: "Tulle, satin and lace dresses for birthdays, weddings, Eid and every celebration.", translations: { ur: "بچیوں کا فینسی / پارٹی وئیر", hi: "बच्चियों के फ़ैंसी / पार्टी वियर" } },
+      { name: "Girls' Casual Dresses", slug: "girls-casual", description: "Soft cotton sundresses and everyday dresses made for play.", translations: { ur: "بچیوں کے کیژول ڈریسز", hi: "बच्चियों की कैज़ुअल ड्रेसेज़" } },
+    ],
   },
 ];
-
-// Urdu / Hindi names for subcategories (keyed by English name).
-const CHILD_TRANSLATIONS = {
-  "T-Shirts": { ur: "ٹی شرٹس", hi: "टी-शर्ट" },
-  Shirts: { ur: "شرٹس", hi: "शर्ट" },
-  Hoodies: { ur: "ہوڈیز", hi: "हुडी" },
-  Jackets: { ur: "جیکٹس", hi: "जैकेट" },
-  Pants: { ur: "پینٹس", hi: "पैंट" },
-  Trousers: { ur: "ٹراؤزرز", hi: "ट्राउज़र" },
-  Tracksuits: { ur: "ٹریک سوٹس", hi: "ट्रैकसूट" },
-  Dresses: { ur: "ڈریسز", hi: "ड्रेस" },
-  Tops: { ur: "ٹاپس", hi: "टॉप" },
-  Bags: { ur: "بیگز", hi: "बैग" },
-  "Hand Bags": { ur: "ہینڈ بیگز", hi: "हैंडबैग" },
-  Perfumes: { ur: "پرفیوم", hi: "परफ़्यूम" },
-  Watches: { ur: "گھڑیاں", hi: "घड़ियाँ" },
-  "Fashion Accessories": { ur: "فیشن لوازمات", hi: "फ़ैशन एक्सेसरीज़" },
-};
 
 async function upsertTranslations(db, categoryId, translations = {}) {
   for (const [locale, name] of Object.entries(translations)) {
@@ -71,13 +65,6 @@ async function upsertTranslations(db, categoryId, translations = {}) {
   }
 }
 
-const slugify = (value) =>
-  value
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-
 async function seedCategories(db) {
   let created = 0;
   let total = 0;
@@ -87,19 +74,20 @@ async function seedCategories(db) {
     const parent = await db.category.upsert({
       where: { slug: department.slug },
       update: {},
-      create: { name: department.name, slug: department.slug, sortOrder: departmentIndex },
+      create: { name: department.name, slug: department.slug, description: department.description ?? null, sortOrder: departmentIndex },
     });
+    if (parent.parentId) console.log(`! Category "${department.slug}" exists as a subcategory — left unchanged; fix it in Admin → Categories`);
 
     await upsertTranslations(db, parent.id, department.translations);
 
-    for (const [childIndex, childName] of department.children.entries()) {
-      const slug = department.unprefixed ? slugify(childName).replace(/^hand-bags$/, "handbags") : `${department.slug}-${slugify(childName)}`;
-      const child = await db.category.upsert({
-        where: { slug },
+    for (const [childIndex, child] of department.children.entries()) {
+      const row = await db.category.upsert({
+        where: { slug: child.slug },
         update: {},
-        create: { name: childName, slug, parentId: parent.id, sortOrder: childIndex },
+        create: { name: child.name, slug: child.slug, description: child.description ?? null, parentId: parent.id, sortOrder: childIndex },
       });
-      await upsertTranslations(db, child.id, CHILD_TRANSLATIONS[childName]);
+      if (child.previousNames?.includes(row.name)) await db.category.update({ where: { id: row.id }, data: { name: child.name } });
+      await upsertTranslations(db, row.id, child.translations);
     }
 
     total += 1 + department.children.length;
@@ -107,6 +95,31 @@ async function seedCategories(db) {
   }
 
   console.log(`✓ Categories: ${total} in structure, ${created} newly created, ${total - created} already present`);
+}
+
+/**
+ * Hide (never delete) the previous store's categories that are still ACTIVE.
+ * Products keep their category, so order history, carts and the admin catalogue are
+ * unaffected; hidden categories and their products simply leave the storefront.
+ */
+async function retireLegacyCategories(db) {
+  if (KEEP_LEGACY) {
+    console.log("– Legacy categories: kept (--keep-legacy)");
+    return;
+  }
+  const legacy = await db.category.findMany({
+    where: { slug: { in: LEGACY_SLUGS }, status: "ACTIVE" },
+    select: { slug: true, _count: { select: { products: true } } },
+    orderBy: { slug: "asc" },
+  });
+  if (!legacy.length) {
+    console.log("✓ Legacy categories: none active");
+    return;
+  }
+  await db.category.updateMany({ where: { slug: { in: legacy.map((row) => row.slug) } }, data: { status: "HIDDEN" } });
+  const products = legacy.reduce((sum, row) => sum + row._count.products, 0);
+  console.log(`✓ Legacy categories hidden (not deleted): ${legacy.length} — ${legacy.map((row) => row.slug).join(", ")}`);
+  console.log(`  ${products} product(s) in them are kept with their order history; re-activate a category in Admin → Categories if needed.`);
 }
 
 async function seedAdmin(db) {
@@ -144,6 +157,7 @@ async function seedAdmin(db) {
 try {
   const db = getDb();
   await seedCategories(db);
+  await retireLegacyCategories(db);
   await seedAdmin(db);
 } catch (error) {
   console.error(`✗ Seed failed: ${error.internalMessage ?? error.message}`);

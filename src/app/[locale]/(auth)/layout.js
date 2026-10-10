@@ -13,15 +13,14 @@ export default async function AuthLayout({ children, params }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       {/* Brand panel — desktop only, so mobile goes straight to the form. */}
-      <aside className="relative hidden overflow-hidden bg-ink text-paper lg:block">
-        <Image src="/images/storefront/lookbook-2.jpg" alt="" fill preload sizes="50vw" className="object-cover opacity-55" />
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/30" />
-        <div className="relative flex h-full flex-col justify-between p-14">
-          <Logo variant="full" className="h-32" />
-          <div className="flex max-w-md flex-col gap-5">
+      <aside className="relative hidden overflow-hidden bg-sand lg:block">
+        <Image src="/images/products/antique-gold-embellished-ball-gown/1.jpg" alt="" fill preload sizes="50vw" className="object-cover object-[50%_25%]" />
+        <div className="absolute inset-x-10 bottom-10 flex items-center gap-8 bg-paper p-8 text-ink xl:inset-x-14 xl:bottom-14">
+          <Logo variant="full" className="h-28 shrink-0" />
+          <div className="flex flex-col gap-3 border-s border-line ps-8">
             <span className="rule-gold" aria-hidden="true" />
-            <p className="headline text-display italic">{t("brand.tagline")}</p>
-            <p className="eyebrow text-paper/60">{siteConfig.name}</p>
+            <p className="headline text-title italic">{t("brand.tagline")}</p>
+            <p className="eyebrow text-mute">{t("brand.departments")}</p>
           </div>
         </div>
       </aside>

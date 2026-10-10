@@ -16,13 +16,13 @@ const TIMING = { normal: { reveal: 2450, done: 4300 }, reduced: { reveal: 700, d
 export const WELCOME_GATE = `(function(){var d=document.documentElement;try{var p=location.pathname.replace(/^\\/(ur|hi)(?=\\/|$)/,"")||"/";if(sessionStorage.getItem("${SESSION_KEY}")||/^\\/(account|cart|track-order)(\\/|$)/.test(p)){d.dataset.welcome="done";return}sessionStorage.setItem("${SESSION_KEY}","1");d.dataset.welcome="play"}catch(e){d.dataset.welcome="done"}})();`;
 
 /**
- * Cinematic 4 BRO intro: the real logo mark resolves from blur, a soft light passes
- * across it, the wordmark rises letter by letter, the tagline settles, then a curtain
+ * GF Collection intro: the real logo (public/logo.png, trimmed copy) resolves from
+ * blur on ivory, a soft light passes across it, the tagline settles, then a curtain
  * lifts to reveal the homepage. Pure CSS animation (see globals.css); this component
  * only releases the page entrance at the right moment and handles skipping.
  * Decorative: hidden from assistive technology; any key or click skips it.
  */
-export function WelcomeSplash({ skipLabel }) {
+export function WelcomeSplash({ skipLabel, tagline }) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -73,21 +73,14 @@ export function WelcomeSplash({ skipLabel }) {
       <div className="welcome__ambient" />
       <div className="welcome__content">
         <div className="welcome__mark">
-          {/* The actual 4 BRO mark (optimised copy of public/brand/logo-mark.png). */}
+          {/* The actual GF Collection logo (trimmed copy of public/logo.png). */}
           {/* eslint-disable-next-line @next/next/no-img-element -- fixed-size brand mark, also used as the sheen mask */}
-          <img src="/brand/logo-mark-splash.webp" width="400" height="405" alt="" decoding="async" loading="lazy" fetchPriority="high" />
+          <img src="/brand/gf-logo.png" width="168" height="242" alt="" decoding="async" loading="lazy" fetchPriority="high" />
           <span className="welcome__sheen" />
         </div>
-        <p className="welcome__word" lang="en">
-          {WORD.map((letter, index) => (
-            <span key={index} className={letter === "\u00a0" ? "welcome__space" : undefined} style={{ "--i": index }}>
-              {letter}
-            </span>
-          ))}
-        </p>
-        <p className="welcome__tagline" lang="en">
+        <p className="welcome__tagline">
           <i className="welcome__rule" />
-          <span>Create your legacy</span>
+          <span>{tagline}</span>
           <i className="welcome__rule" />
         </p>
       </div>

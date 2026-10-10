@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useT } from "@/i18n/I18nProvider";
+import Link from "@/i18n/Link";
 import { sortSizes } from "@/lib/catalog/sizes";
 import { cn } from "@/utils/cn";
 import { ProductPrice } from "./ProductPrice";
@@ -101,10 +102,11 @@ export function ProductPurchasePanel({ product, whatsappNumber }) {
                   aria-pressed={active}
                   aria-label={`${option.name}${isAvailable ? "" : ` — ${t("product.unavailable")}`}`}
                   title={option.name}
+                  disabled={!isAvailable && !active}
                   onClick={() => setColor(active && colors.length > 1 ? null : option.name)}
                   className={cn(
-                    "relative grid size-11 place-items-center rounded-full border transition-colors",
-                    active ? "border-ink" : "border-line hover:border-mute",
+                    "relative grid size-11 place-items-center rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-45",
+                    active ? "border-ink shadow-[0_0_0_1px_var(--color-ink)]" : "border-line hover:border-mute",
                   )}
                 >
                   <span
@@ -121,7 +123,15 @@ export function ProductPurchasePanel({ product, whatsappNumber }) {
 
       {needsSize ? (
         <fieldset className="flex flex-col gap-3">
-          <legend className={cn("eyebrow mb-3", attempted && missingSize ? "text-danger" : "text-subtle")}>{t("product.size")}</legend>
+          <legend className={cn("eyebrow mb-3 flex w-full items-center justify-between gap-3", attempted && missingSize ? "text-danger" : "text-subtle")}>
+            <span>
+              {t("product.size")}
+              {size ? <span className="text-ink"> — {size}</span> : null}
+            </span>
+            <Link href="/size-guide" className="!tracking-[0.16em] text-mute underline underline-offset-4 hover:text-ink">
+              {t("product.sizeGuide")}
+            </Link>
+          </legend>
           <div className="flex flex-wrap gap-2">
             {sizes.map((option) => {
               const isAvailable = sizeAvailable(option);
@@ -132,11 +142,12 @@ export function ProductPurchasePanel({ product, whatsappNumber }) {
                   type="button"
                   aria-pressed={active}
                   aria-label={`${option}${isAvailable ? "" : ` — ${t("product.unavailable")}`}`}
+                  disabled={!isAvailable && !active}
                   onClick={() => setSize(active && sizes.length > 1 ? null : option)}
                   className={cn(
-                    "h-11 min-w-12 border px-4 text-sm transition-colors",
+                    "h-11 min-w-12 border px-4 text-sm transition-colors disabled:cursor-not-allowed",
                     active ? "border-ink bg-ink text-paper" : "border-line hover:border-ink",
-                    !isAvailable && !active && "text-mute line-through decoration-mute",
+                    !isAvailable && !active && "bg-bone/60 text-mute line-through decoration-mute",
                   )}
                 >
                   {option}

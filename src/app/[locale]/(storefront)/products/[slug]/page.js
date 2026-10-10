@@ -12,6 +12,8 @@ import Link from "@/i18n/Link";
 import { localizeHref } from "@/i18n/navigation";
 import { getTranslator } from "@/i18n/server";
 import { getPublicContact } from "@/lib/settings";
+import { cn } from "@/utils/cn";
+import { departmentText } from "@/utils/department";
 import { createMetadata } from "@/utils/seo";
 
 // Rendered on first request, then cached and revalidated every minute (ISR).
@@ -114,13 +116,27 @@ export default async function ProductPage({ params }) {
               {badges.length ? (
                 <div className="flex flex-wrap gap-1.5">
                   {badges.map((badge) => (
-                    <ProductBadge key={badge.variant} variant={badge.variant} className={badge.variant === "new" ? "border border-line" : ""}>
+                    <ProductBadge key={badge.variant} variant={badge.variant}>
                       {badge.label}
                     </ProductBadge>
                   ))}
                 </div>
               ) : null}
-              {product.category ? <p className="eyebrow text-gold-deep">{product.category.name}</p> : null}
+              {product.category ? (
+                <p className="eyebrow flex flex-wrap items-center gap-x-2">
+                  {product.category.parent ? (
+                    <>
+                      <Link href={`/collections/${product.category.parent.slug}`} className={cn("hover:underline", departmentText(product.category.parent.slug))}>
+                        {product.category.parent.name}
+                      </Link>
+                      <span aria-hidden="true" className="text-mute">·</span>
+                    </>
+                  ) : null}
+                  <Link href={`/collections/${product.category.slug}`} className={cn("hover:underline", product.category.parent ? "text-gold-deep" : departmentText(product.category.slug))}>
+                    {product.category.name}
+                  </Link>
+                </p>
+              ) : null}
               <div className="flex items-start justify-between gap-4">
                 <h1 className="headline text-display-sm">{product.name}</h1>
                 <FavoriteButton productId={product.id} productName={product.name} className="-me-2 shrink-0" />

@@ -3,18 +3,22 @@ import Link from "@/i18n/Link";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/utils/cn";
 
-// Brand assets generated from public/logo.png:
-//   mark  → crown + 4B monogram (header, compact spaces)
-//   full  → complete lockup incl. "FOUR BRO · CREATE YOUR LEGACY" (footer, brand moments)
+// Brand assets cut from the store logo (public/logo.png) — same artwork, transparent
+// padding removed so it can be sized precisely; aspect ratios are never altered:
+//   full       → the complete stacked logo: monogram, "GF", "COLLECTION" (footer, auth, brand moments)
+//   horizontal → the same monogram and wordmark placed side by side (headers, where height is limited)
+//   mark       → the champagne monogram alone (very compact spaces, favicon)
+// The wordmark is near-black, so the logo is always placed on light (ivory) surfaces.
 const ASSETS = {
-  mark: { src: "/brand/logo-mark.png", width: 255, height: 258 },
-  full: { src: "/brand/logo-full.png", width: 448, height: 366 },
+  full: { src: "/brand/gf-logo.png", width: 168, height: 242 },
+  horizontal: { src: "/brand/gf-logo-horizontal.png", width: 353, height: 131 },
+  mark: { src: "/brand/gf-mark.png", width: 163, height: 131 },
 };
 
 /**
- * @param {{ variant?: "mark" | "full", href?: string | null, className?: string, imageClassName?: string, preload?: boolean }} props
+ * @param {{ variant?: "horizontal" | "full" | "mark", href?: string | null, className?: string, imageClassName?: string, preload?: boolean }} props
  */
-export function Logo({ variant = "mark", href = "/", className, imageClassName, preload = false }) {
+export function Logo({ variant = "horizontal", href = "/", className, imageClassName, preload = false }) {
   const asset = ASSETS[variant];
   const image = (
     <Image
@@ -23,7 +27,8 @@ export function Logo({ variant = "mark", href = "/", className, imageClassName, 
       height={asset.height}
       alt={`${siteConfig.name} — ${siteConfig.tagline}`}
       preload={preload}
-      className={cn("h-full w-auto", imageClassName)}
+      unoptimized
+      className={cn("h-full w-auto object-contain", imageClassName)}
     />
   );
 

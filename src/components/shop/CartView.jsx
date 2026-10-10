@@ -89,7 +89,7 @@ export function CartView() {
               <h2 id="bag-title" className="eyebrow">
                 {t(cart.count === 1 ? "cart.item" : "cart.items", { count: cart.count })}
               </h2>
-              <Button href="/collections/new-arrivals" variant="link">
+              <Button href="/collections/shop" variant="link">
                 {t("cart.continue")}
               </Button>
             </div>
@@ -107,7 +107,7 @@ export function CartView() {
           title={t("cart.empty")}
           description={shop.status === "error" ? t("cart.loadError") : t("cart.emptyText")}
           action={
-            <Button href="/collections/new-arrivals" arrow>
+            <Button href="/collections/shop" arrow>
               {t("cart.continue")}
             </Button>
           }

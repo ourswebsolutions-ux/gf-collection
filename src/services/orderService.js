@@ -26,14 +26,15 @@ const ORDER_NUMBER_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; // no 0/O/1/I 
 const MAX_NUMBER_ATTEMPTS = 4;
 
 /**
- * Customer-friendly, non-sequential order number: 4BRO-YYYYMMDD-XXXXXX.
+ * Customer-friendly, non-sequential order number: GF-YYYYMMDD-XXXXXX
+ * (orders placed before the rebrand keep their 4BRO-… numbers and stay trackable).
  * Six random characters from a 32-symbol alphabet (~1 billion per day); the column
  * is unique-indexed and placement retries on the rare collision.
  */
 export function generateOrderNumber(date = new Date()) {
   const stamp = date.toISOString().slice(0, 10).replace(/-/g, "");
   const suffix = Array.from({ length: 6 }, () => ORDER_NUMBER_ALPHABET[randomInt(ORDER_NUMBER_ALPHABET.length)]).join("");
-  return `4BRO-${stamp}-${suffix}`;
+  return `GF-${stamp}-${suffix}`;
 }
 
 /**

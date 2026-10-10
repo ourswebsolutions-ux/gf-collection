@@ -13,13 +13,13 @@ export default async function CheckoutLayout({ children, params }) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-graphite bg-ink text-paper">
+      <header className="sticky top-0 z-40 border-b border-line bg-paper text-ink">
         <div className="container-page flex h-16 items-center justify-between gap-4 lg:h-20">
           <div className="flex items-center gap-5">
             <Logo preload className="h-10 lg:h-12" />
-            <span aria-hidden="true" className="hidden h-6 w-px bg-graphite sm:block" />
-            <p className="eyebrow hidden items-center gap-2 !text-[0.625rem] text-mist sm:flex">
-              <Icon name="lock" className="size-3.5 text-gold" />
+            <span aria-hidden="true" className="hidden h-6 w-px bg-line sm:block" />
+            <p className="eyebrow hidden items-center gap-2 !text-[0.625rem] text-mute sm:flex">
+              <Icon name="lock" className="size-3.5 text-gold-deep" />
               {t("checkout.secure")}
             </p>
           </div>

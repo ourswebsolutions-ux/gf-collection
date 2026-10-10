@@ -43,7 +43,7 @@ export function TrackOrder({ initialNumber = "" }) {
     <form action={action} className="flex flex-col gap-7" noValidate>
       {state?.message ? <Alert tone="error">{state.message}</Alert> : null}
       <input type="hidden" name="locale" value={locale} />
-      <Field label={t("tracking.orderNumber")} name="orderNumber" dir="ltr" autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="4BRO-20261003-XXXXXX" required defaultValue={state?.values?.orderNumber ?? initialNumber} />
+      <Field label={t("tracking.orderNumber")} name="orderNumber" dir="ltr" autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="GF-20261003-XXXXXX" required defaultValue={state?.values?.orderNumber ?? initialNumber} />
       <Field label={t("tracking.email")} name="email" type="email" dir="ltr" autoComplete="email" required defaultValue={state?.values?.email ?? ""} />
       <SubmitButton pendingLabel={t("tracking.searching")}>{t("tracking.submit")}</SubmitButton>
     </form>

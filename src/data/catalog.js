@@ -50,8 +50,13 @@ async function query({ filter, take, locale, sort }) {
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
-export const getNewArrivals = ({ limit = 8, locale = DEFAULT_LOCALE } = {}) =>
-  resilient("new arrivals", () => query({ filter: { flag: "newArrival" }, take: limit, locale }));
+/** Products filed in a department or category (by slug), featured first — homepage department rails. */
+export const getCategoryProducts = (slug, { limit = 4, locale = DEFAULT_LOCALE } = {}) =>
+  resilient(`category ${slug}`, () => query({ filter: { categories: [slug] }, sort: "featured", take: limit, locale }));
+
+/** Pieces currently on sale (a real sale price and the on-sale flag). */
+export const getSaleProducts = ({ limit = 4, locale = DEFAULT_LOCALE } = {}) =>
+  resilient("sale", () => query({ filter: { flag: "onSale" }, sort: "featured", take: limit, locale }));
 
 /** Flagged best sellers and products with real sales, ranked by units sold. Empty until something sells. */
 export const getBestSellers = ({ limit = 4, locale = DEFAULT_LOCALE } = {}) =>
@@ -60,10 +65,10 @@ export const getBestSellers = ({ limit = 4, locale = DEFAULT_LOCALE } = {}) =>
 export const getFeaturedProducts = ({ limit = 4, locale = DEFAULT_LOCALE } = {}) =>
   resilient("featured", () => query({ filter: { flag: "featured" }, take: limit, locale }));
 
-const EMPTY_FACETS = { sizes: [], colors: [], materials: [], price: { min: null, max: null }, genders: [], subcategories: [], flags: {}, inStock: 0 };
+const EMPTY_FACETS = { sizes: [], colors: [], materials: [], price: { min: null, max: null }, genders: [], departments: [], subcategories: [], flags: {}, inStock: 0 };
 
 /** Listing core shared by collection and search pages: filter + sort + paginate + facets. */
-async function runListing(label, { baseFilter, searchParams, locale, parentCategoryId }) {
+async function runListing(label, { baseFilter, searchParams, locale, parentCategoryId, departmentFacet = false }) {
   const usdRate = await getUsdRate();
   const { state, filter: userFilter, sort } = parseCatalogQuery(searchParams ?? {}, { usdRate });
   // The collection scope is kept apart from the user's filters so facets/user input can never widen it.
@@ -71,7 +76,7 @@ async function runListing(label, { baseFilter, searchParams, locale, parentCateg
 
   const [listing, facets, salesData] = await Promise.all([
     resilient(label, () => paginatePublishedProducts({ filter, sort, page: state.page, pageSize: PAGE_SIZE, locale }), { items: [], total: 0, page: 1, pageCount: 1 }),
-    resilient(`${label} facets`, () => getFilterFacets(filter, { parentCategoryId, locale }), EMPTY_FACETS),
+    resilient(`${label} facets`, () => getFilterFacets(filter, { parentCategoryId, departmentFacet, locale }), EMPTY_FACETS),
     resilient("sales data", () => hasSalesData(), false),
   ]);
   return { state, products: await cards(listing.items), total: listing.total, page: listing.page, pageCount: listing.pageCount, facets, salesData, usdRate };
@@ -99,17 +104,28 @@ export async function getCollection(slug, { locale = DEFAULT_LOCALE, searchParam
     image: category?.imageUrl ? { src: category.imageUrl, alt: category.name } : definition?.image ? { ...definition.image, alt: copy("title") } : null,
     filter: definition?.filter ?? { categories: [slug] },
     parent: category?.parent ? { name: category.parent.name, slug: category.parent.slug } : null,
+    // "women" | "girls" | null — picks the department accent on the banner.
+    department: definition?.department ?? category?.parent?.slug ?? (category && !category.parentId ? slug : null),
   };
+
+  // Quick navigation between the categories of the same department (subcategory pages).
+  if (category?.parentId) {
+    const tree = await resilient("category tree", () => listCategoryTree({ locale }), []);
+    const department = tree.find((item) => item.id === category.parentId);
+    collection.siblings = department ? department.children.map((child) => ({ slug: child.slug, name: child.name })) : [];
+    if (department) collection.parent = { name: department.name, slug: department.slug };
+  }
 
   // Subcategory facet is offered on department pages (top-level categories).
   const parentCategoryId = category && !category.parentId ? category.id : null;
-  const listing = await runListing(`collection ${slug}`, { baseFilter: collection.filter, searchParams, locale, parentCategoryId });
+  const departmentFacet = Boolean(definition?.departmentFacet);
+  const listing = await runListing(`collection ${slug}`, { baseFilter: collection.filter, searchParams, locale, parentCategoryId, departmentFacet });
   return { collection, ...listing };
 }
 
 /** Search results with the same filters / sorting / pagination as collections. */
 export async function getSearchResults({ locale = DEFAULT_LOCALE, searchParams } = {}) {
-  return runListing("search", { baseFilter: {}, searchParams, locale });
+  return runListing("search", { baseFilter: {}, searchParams, locale, departmentFacet: true });
 }
 
 /** Full product page data (all images, variants, details) or null. */

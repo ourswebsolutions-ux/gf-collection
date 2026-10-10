@@ -81,6 +81,6 @@ export const checkoutSchema = z
 
 /** Public order tracking: order number + the email used on the order. */
 export const trackOrderSchema = z.object({
-  orderNumber: z.string().trim().toUpperCase().regex(/^4B(RO)?-\d{6,8}-[0-9A-Z]{5,6}$/, { error: "Enter a valid order number." }),
+  orderNumber: z.string().trim().toUpperCase().regex(/^(GF|4B(RO)?)-\d{6,8}-[0-9A-Z]{5,6}$/, { error: "Enter a valid order number." }),
   email: emailSchema,
 });

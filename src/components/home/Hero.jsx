@@ -1,73 +1,69 @@
-import { getImageProps } from "next/image";
+import Image from "next/image";
+import Link from "@/i18n/Link";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/utils/cn";
+import { departmentText } from "@/utils/department";
 
 /**
- * Full-bleed cinematic hero with art direction: separate desktop (landscape)
- * and mobile (portrait) crops served through <picture>, an optional muted
- * background video, and overlay content. Preloaded as the LCP element.
+ * Brand hero: the store promise beside the two departments, so it is clear at a
+ * glance that this is a Women & Girls house. Text first on phones (headline, two
+ * department buttons), then both departments side by side as large tappable
+ * portraits; on desktop the copy and the portraits share the first screen.
+ * The first portrait is preloaded as the LCP image.
  *
  * @param {{ content: ReturnType<typeof import("@/content/home").getHomeContent>["hero"] }} props
  */
 export function Hero({ content }) {
-  const { media } = content;
-  const common = { alt: media.alt, sizes: "100vw", fetchPriority: "high", loading: "eager" };
-  const {
-    props: { srcSet: desktopSrcSet },
-  } = getImageProps({ ...common, ...media.desktop });
-  const {
-    props: { srcSet: mobileSrcSet, ...imageProps },
-  } = getImageProps({ ...common, ...media.mobile });
-
   return (
-    <section aria-labelledby="hero-title" className="relative isolate flex min-h-[calc(100svh-6.5rem)] items-end overflow-hidden bg-ink text-paper lg:min-h-[calc(100svh-7.5rem)]">
-      {/* The picture box carries the intro zoom; the image keeps its own scroll parallax. */}
-      <picture className="hero-media absolute inset-0 -z-20 block overflow-hidden">
-        <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
-        <source srcSet={mobileSrcSet} />
-        {/* eslint-disable-next-line jsx-a11y/alt-text -- alt is supplied via getImageProps */}
-        <img {...imageProps} className="hero-parallax absolute inset-0 size-full origin-top object-cover object-[50%_40%]" />
-      </picture>
+    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-paper">
+      {/* A quiet champagne wash behind the portraits — one tone, no gradient sweep. */}
+      <div aria-hidden="true" className="absolute inset-y-0 end-0 -z-10 hidden w-[42%] bg-bone lg:block" />
 
-      {media.video ? (
-        <video
-          className="absolute inset-0 -z-10 size-full object-cover motion-reduce:hidden"
-          src={media.video.src}
-          poster={media.video.poster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden="true"
-        />
-      ) : null}
-
-      {/* Flat tonal veil for text legibility (no gradient wash). */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-ink/25" />
-
-      <div className="hero-content container-page flex w-full flex-col gap-8 pb-24 pt-32 sm:pb-20 lg:pb-24">
-        <p className="eyebrow flex animate-reveal items-center gap-4 text-gold">
-          <span className="rule-gold" aria-hidden="true" />
-          {content.eyebrow}
-        </p>
-        <h1
-          id="hero-title"
-          className="headline max-w-5xl animate-reveal text-display-lg [animation-delay:120ms] [text-wrap:balance]"
-        >
-          {content.title}
-        </h1>
-        <div className="flex animate-reveal flex-col gap-8 [animation-delay:240ms] md:flex-row md:items-end md:justify-between">
-          <p className="max-w-md text-[0.9375rem] leading-relaxed text-paper/80">{content.subtitle}</p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href={content.cta.href} variant="gold" size="lg" arrow>
+      <div className="container-page grid gap-9 pb-12 pt-9 sm:pb-16 sm:pt-12 lg:min-h-[calc(100svh-7.5rem)] lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-14">
+        <div className="flex flex-col gap-6 lg:col-span-5 lg:gap-8">
+          <p className="eyebrow flex animate-reveal items-center gap-4 text-gold-deep">
+            <span className="rule-gold" aria-hidden="true" />
+            {content.eyebrow}
+          </p>
+          <h1 id="hero-title" className="headline max-w-xl animate-reveal text-[clamp(2.75rem,4vw+0.5rem,5rem)] leading-[0.98] [animation-delay:120ms] [text-wrap:balance]">
+            {content.title}
+          </h1>
+          <p className="max-w-md animate-reveal text-[0.9375rem] leading-relaxed text-subtle [animation-delay:200ms] sm:text-base">{content.subtitle}</p>
+          <div className="grid animate-reveal grid-cols-2 gap-3 [animation-delay:260ms] sm:flex">
+            <Button href={content.cta.href} size="lg" className="!px-4 sm:!px-10">
               {content.cta.label}
             </Button>
-            {content.secondaryCta ? (
-              <Button href={content.secondaryCta.href} variant="outline-light" size="lg">
-                {content.secondaryCta.label}
-              </Button>
-            ) : null}
+            <Button href={content.secondaryCta.href} variant="secondary" size="lg" className="!px-4 sm:!px-10">
+              {content.secondaryCta.label}
+            </Button>
           </div>
         </div>
+
+        <ul className="hero-media grid grid-cols-2 gap-3 sm:gap-5 lg:col-span-7">
+          {content.panels.map((panel, index) => (
+            <li key={panel.href} className={cn("animate-reveal", index === 1 && "lg:mt-20 [animation-delay:160ms]")}>
+              <Link href={panel.href} className="group relative block aspect-[4/5] overflow-hidden bg-sand">
+                <Image
+                  src={panel.image.src}
+                  alt={panel.image.alt}
+                  fill
+                  sizes="(min-width: 1024px) 28vw, 48vw"
+                  preload={index === 0}
+                  fetchPriority={index === 0 ? "high" : undefined}
+                  className="object-cover transition-[scale] duration-[1400ms] ease-(--ease-luxe) group-hover:scale-[1.04]"
+                />
+                <span className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 bg-paper px-3 py-3 text-ink sm:inset-x-3 sm:bottom-3 sm:px-5 sm:py-4">
+                  <span className="flex min-w-0 flex-col gap-1">
+                    <span className="headline text-[1.375rem] leading-none sm:text-[1.875rem]">{panel.label}</span>
+                    <span className={cn("eyebrow hidden truncate !text-[0.5625rem] sm:block", departmentText(panel.tone))}>{panel.caption}</span>
+                  </span>
+                  <Icon name="arrowRight" className="size-4 shrink-0 text-gold-deep transition-transform duration-500 ease-(--ease-luxe) group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

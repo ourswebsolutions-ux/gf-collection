@@ -111,7 +111,7 @@ export default async function InfoPage({ params }) {
         {config.contact ? <ContactChannels contact={contact} t={t} /> : null}
         {page !== "about" && page !== "contact" ? <p className="border-s-2 border-gold ps-5 text-sm leading-relaxed text-mute">{t("pages.updated")}</p> : null}
 
-        <Button href="/collections/new-arrivals" variant="link" arrow className="self-start">
+        <Button href="/collections/shop" variant="link" arrow className="self-start">
           {t("pages.continue")}
         </Button>
       </div>

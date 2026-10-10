@@ -1,30 +1,40 @@
 @import "tailwindcss";
 
 /* ──────────────────────────────────────────────────────────────────────────
-   4 BRO design tokens
-   Derived from the brand mark: deep warm black, charcoal, off-white paper and
-   the metallic gold of the crest — gold is the ONLY accent and is used
-   sparingly (labels, rules, hover states, primary CTA on dark).
+   GF Collection design tokens
+   Built around public/logo.png: a champagne-gold monogram (#B29569 → #CBAA76 →
+   #D1B48C) above a near-black serif wordmark, on a transparent ground. The logo
+   reads best on warm light surfaces, so the store is ivory-first: espresso ink
+   for type and primary actions, champagne gold as the single brand accent, and
+   two quiet department tints (rose for Women, lilac for Girls / Kids) used only for
+   department labels and section washes — never as competing brand colours.
    All text/background pairings below meet WCAG AA (≥ 4.5:1).
    ────────────────────────────────────────────────────────────────────────── */
 @theme {
-  /* Neutrals */
-  --color-ink: #0b0b0a; /* primary black */
-  --color-ink-soft: #1a1918; /* charcoal surfaces */
-  --color-graphite: #2a2927; /* raised charcoal / borders on dark */
-  --color-paper: #f7f5f0; /* off-white page background */
-  --color-bone: #efebe4; /* alternate light section */
-  --color-sand: #e4ded4;
-  --color-line: #e0dad0; /* hairlines on light */
-  --color-mute: #6f6a62; /* secondary text on light (4.9:1) */
-  --color-subtle: #56524b; /* body copy on light (7.1:1) */
-  --color-mist: #a39e95; /* secondary text on dark (7.4:1) */
+  /* Neutrals (warm) */
+  --color-ink: #1c1a17; /* espresso black — sampled from the wordmark */
+  --color-ink-soft: #2b2723; /* hover for ink surfaces */
+  --color-graphite: #3d3832; /* borders on dark */
+  --color-paper: #fbf8f3; /* ivory page background */
+  --color-bone: #f4eee6; /* alternate cream section */
+  --color-sand: #e9dfd1; /* image placeholders, subtle fills */
+  --color-line: #e5dbcd; /* hairlines on light */
+  --color-mute: #6e665c; /* secondary text on light (5.3:1) */
+  --color-subtle: #514a42; /* body copy on light (8.2:1) */
+  --color-mist: #b3aa9d; /* secondary text on dark (7.6:1) */
 
-  /* Brand gold (sampled from logo: #F9D562 → #D6A545 → #A16A1B) */
-  --color-gold: #c9a24c; /* accent on dark (8.2:1 on ink) */
-  --color-gold-light: #e3c57a; /* hover on dark */
-  --color-gold-deep: #8a6a2f; /* gold text on light (4.6:1) */
-  --color-brass: #8a6a2f; /* legacy alias */
+  /* Brand champagne gold (sampled from the monogram) */
+  --color-gold: #b8976a; /* accent fills, rules, badges; on ink 6.3:1 */
+  --color-gold-light: #d6bf98; /* hover on dark, soft highlights */
+  --color-gold-deep: #85663f; /* gold text on light (5.0:1) */
+  --color-champagne: #efe3d0; /* pale gold wash */
+  --color-brass: #85663f; /* legacy alias */
+
+  /* Department accents — Women (rose) and Girls / Kids (lilac) */
+  --color-women: #9b5c55; /* text/icons on light (4.9:1) */
+  --color-women-tint: #f4e8e3;
+  --color-girls: #7a5a87; /* text/icons on light (5.5:1) */
+  --color-girls-tint: #efe8f2;
 
   /* Feedback */
   --color-danger: #9f2d2d;
@@ -229,20 +239,6 @@
 /* ── Depth & parallax (CSS scroll-driven; no JS) ─────────────────────────────
    Restrained: small translations only, tablet/desktop only, never for users who
    prefer reduced motion, and simply static where scroll timelines are unsupported. */
-@keyframes hero-parallax {
-  from {
-    transform: translate3d(0, 0, 0) scale(1.06);
-  }
-  to {
-    transform: translate3d(0, 9%, 0) scale(1);
-  }
-}
-@keyframes hero-content-out {
-  to {
-    opacity: 0.15;
-    transform: translate3d(0, -6%, 0);
-  }
-}
 @keyframes depth-near {
   from {
     transform: translate3d(0, 48px, 0);
@@ -262,17 +258,6 @@
 @layer components {
   @supports (animation-timeline: scroll()) {
     @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-      .hero-parallax {
-        animation: hero-parallax linear both;
-        animation-timeline: scroll(root);
-        animation-range: 0 100vh;
-        will-change: transform;
-      }
-      .hero-content {
-        animation: hero-content-out linear both;
-        animation-timeline: scroll(root);
-        animation-range: 0 85vh;
-      }
       .depth-near {
         animation: depth-near linear both;
         animation-timeline: view();
@@ -370,7 +355,7 @@
 
   /* Native <dialog> drawers: backdrop + discrete enter/exit transitions. */
   dialog::backdrop {
-    background: rgb(11 11 10 / 0.55);
+    background: rgb(28 26 23 / 0.55);
     opacity: 0;
     transition:
       opacity 300ms ease,
@@ -404,10 +389,9 @@
    visit the splash is never displayed. States: play (intro running, page
    entrance held) → reveal (page entrance released, curtain continues) → done;
    exit = skipped by click/key (short curtain). Timeline:
-     0.00  ink stage + slow ambient light
-     0.15  logo: blur → sharp, 0.94 → 1
+     0.00  ivory stage + slow champagne ambient light
+     0.15  the GF Collection logo: blur → sharp, 0.94 → 1
      0.95  light sweep across the logo (masked to the artwork)
-     0.90  "4 BRO" letters rise from a mask (staggered)
      1.35  tagline + gold rules
      2.15  content lifts away; 2.30 the curtain rises, the homepage is revealed  */
 @keyframes welcome-ambient {
@@ -421,10 +405,6 @@
 @keyframes welcome-sheen {
   from { transform: translateX(-120%) skewX(-18deg); }
   to { transform: translateX(220%) skewX(-18deg); }
-}
-@keyframes welcome-letter {
-  from { transform: translateY(105%); }
-  to { transform: translateY(0); }
 }
 @keyframes welcome-tagline {
   from { opacity: 0; letter-spacing: 0.62em; }
@@ -468,8 +448,8 @@
     place-items: center;
     padding: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
     overflow: hidden;
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-paper);
+    color: var(--color-ink);
     cursor: pointer;
     animation: welcome-curtain 850ms var(--welcome-ease) 2300ms both;
   }
@@ -477,7 +457,7 @@
   .welcome__ambient {
     position: absolute;
     inset: -20%;
-    background: radial-gradient(closest-side at 50% 46%, rgb(201 162 77 / 0.12), rgb(201 162 77 / 0.07) 35%, rgb(201 162 77 / 0.025) 65%, rgb(201 162 77 / 0) 100%);
+    background: radial-gradient(closest-side at 50% 46%, rgb(184 151 106 / 0.12), rgb(184 151 106 / 0.07) 35%, rgb(184 151 106 / 0.025) 65%, rgb(184 151 106 / 0) 100%);
     animation: welcome-ambient 2600ms ease-out both;
     pointer-events: none;
   }
@@ -492,8 +472,8 @@
   }
   .welcome__mark {
     position: relative;
-    width: clamp(7.5rem, 22vw, 11.5rem);
-    aspect-ratio: 400 / 405;
+    width: clamp(8.5rem, 30vw, 12rem);
+    aspect-ratio: 168 / 242;
     animation: welcome-logo 1000ms cubic-bezier(0.22, 1, 0.36, 1) 150ms both;
   }
   .welcome__mark img {
@@ -506,7 +486,7 @@
     position: absolute;
     inset: 0;
     overflow: hidden;
-    mask: url("/brand/logo-mark-splash.webp") center / contain no-repeat;
+    mask: url("/brand/gf-logo.png") center / contain no-repeat;
     pointer-events: none;
   }
   .welcome__sheen::after {
@@ -514,29 +494,8 @@
     position: absolute;
     inset: -10% auto -10% 0;
     width: 40%;
-    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent);
     animation: welcome-sheen 700ms ease-in-out 950ms both;
-  }
-  .welcome__word {
-    display: flex;
-    gap: 0.04em;
-    overflow: hidden;
-    padding-block: 0.06em;
-    font-family: var(--font-cormorant), Georgia, serif;
-    font-weight: 400;
-    font-size: clamp(2.5rem, 9vw, 4.75rem);
-    line-height: 1;
-    letter-spacing: 0.18em;
-    font-variant-numeric: lining-nums;
-    margin-inline-end: -0.18em; /* optical centring of tracked type */
-  }
-  .welcome__word .welcome__space {
-    width: 0.12em;
-  }
-  .welcome__word span {
-    display: inline-block;
-    animation: welcome-letter 750ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(900ms + var(--i) * 60ms);
   }
   .welcome__tagline {
     display: flex;
@@ -546,7 +505,7 @@
     font-size: clamp(0.625rem, 2.6vw, 0.75rem);
     font-weight: 600;
     text-transform: uppercase;
-    color: var(--color-gold);
+    color: var(--color-gold-deep);
     white-space: nowrap;
   }
   .welcome__tagline span {
@@ -576,13 +535,13 @@
     font-weight: 600;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: rgb(245 243 238 / 0.45);
+    color: rgb(28 26 23 / 0.5);
     transition: color 300ms;
     animation: welcome-fade-in 600ms ease-out 600ms both;
   }
   .welcome__skip:hover,
   .welcome__skip:focus-visible {
-    color: var(--color-paper);
+    color: var(--color-ink);
   }
 
   /* Skipped (click / key): leave immediately with a short curtain. */

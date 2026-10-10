@@ -12,20 +12,22 @@ import { Section, SelectField, StatusBadge, TextArea, TextField, Toggle } from "
 import { ImageManager } from "./ImageManager";
 import { emptyVariant, VariantsEditor } from "./VariantsEditor";
 
+// Audience is set automatically from the department (Women → Women, Girls / Kids → Girls) and can be
+// adjusted. "Men" is only listed for products carried over from the previous catalogue.
 const GENDERS = [
-  { value: "MEN", label: "Men" },
   { value: "WOMEN", label: "Women" },
-  { value: "KIDS", label: "Kids" },
+  { value: "KIDS", label: "Girls / Kids" },
   { value: "UNISEX", label: "Unisex" },
 ];
+const LEGACY_GENDER = { value: "MEN", label: "Men (previous catalogue)" };
+const GENDER_BY_DEPARTMENT = { women: "WOMEN", girls: "KIDS" };
 // Archived is not offered here: archiving/restoring are separate, confirmed actions.
 const STATUSES = [
   { value: "DRAFT", label: "Draft — hidden from the store" },
   { value: "PUBLISHED", label: "Published — visible in the store" },
 ];
 const FLAGS = [
-  { key: "featured", label: "Featured", description: "Highlighted in curated sections." },
-  { key: "newArrival", label: "New arrival", description: "Shown in New Arrivals." },
+  { key: "featured", label: "Featured", description: "Highlighted on the homepage and in Featured." },
   { key: "bestSeller", label: "Best seller", description: "Shown in Best Sellers." },
   { key: "onSale", label: "On sale", description: "Uses the sale price; requires a sale price." },
 ];
@@ -49,13 +51,12 @@ const EMPTY = {
   shortDescription: "",
   description: "",
   material: "",
-  gender: "UNISEX",
+  gender: "WOMEN",
   status: "DRAFT",
   categoryId: "",
   price: "",
   salePrice: "",
   featured: false,
-  newArrival: false,
   bestSeller: false,
   onSale: false,
   seoTitle: "",
@@ -182,8 +183,8 @@ export function ProductForm({ product, categories }) {
                 }}
               />
               <TextField id="sku" label="Product SKU (style code)" maxLength={64} value={form.sku} error={fieldError("sku")} hint="Optional. Variants have their own SKUs." onChange={(event) => set({ sku: event.target.value.toUpperCase() })} />
-              <SelectField id="gender" label="Gender" value={form.gender} error={fieldError("gender")} onChange={(event) => set({ gender: event.target.value })}>
-                {GENDERS.map((gender) => (
+              <SelectField id="gender" label="Audience" value={form.gender} error={fieldError("gender")} hint="Set from the department; change only if needed." onChange={(event) => set({ gender: event.target.value })}>
+                {(form.gender === LEGACY_GENDER.value ? [...GENDERS, LEGACY_GENDER] : GENDERS).map((gender) => (
                   <option key={gender.value} value={gender.value}>
                     {gender.label}
                   </option>
@@ -222,8 +223,8 @@ export function ProductForm({ product, categories }) {
             </div>
           </Section>
 
-          <Section id="variants" title="Variants" description="Size and colour are optional (e.g. perfumes, watches). Each variant needs a unique SKU.">
-            <VariantsEditor variants={form.variants} onChange={(variants) => set({ variants })} errors={errors} baseSku={form.sku || form.slug} />
+          <Section id="variants" title="Sizes, colours & stock" description="One row per size/colour combination, each with its own stock and SKU. Women and Girls use their own size ranges — pick a preset or type any sizes. Size and colour may be left blank for one-size pieces.">
+            <VariantsEditor variants={form.variants} onChange={(variants) => set({ variants })} errors={errors} baseSku={form.sku || form.slug} department={department?.slug ?? null} />
           </Section>
 
           <Section id="images" title="Images" description="Upload as many images as needed: front, back, side, details, on model…">
@@ -256,18 +257,22 @@ export function ProductForm({ product, categories }) {
             {product?.hasOrders ? <p className="mt-3 text-xs text-mute">This product appears in orders, so it can be archived but not deleted.</p> : null}
           </Section>
 
-          <Section id="category" title="Category">
+          <Section id="category" title="Department & category">
             <div className="flex flex-col gap-5">
               <SelectField
                 id="department"
-                label="Category"
+                label="Department"
                 required
                 value={department?.id ?? ""}
                 error={fieldError("categoryId")}
-                onChange={(event) => set({ categoryId: event.target.value })}
+                hint="Women or Girls / Kids."
+                onChange={(event) => {
+                  const next = categories.find((item) => item.id === event.target.value);
+                  set({ categoryId: event.target.value, ...(GENDER_BY_DEPARTMENT[next?.slug] && { gender: GENDER_BY_DEPARTMENT[next.slug] }) });
+                }}
               >
                 <option value="" disabled>
-                  Choose a category
+                  Choose a department
                 </option>
                 {categories.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -278,10 +283,10 @@ export function ProductForm({ product, categories }) {
               </SelectField>
               <SelectField
                 id="subcategory"
-                label="Subcategory"
+                label="Category"
                 value={subcategoryId}
                 disabled={!department?.children.length}
-                hint={department && !department.children.length ? "This category has no subcategories." : "Optional."}
+                hint={department && !department.children.length ? "This department has no categories yet." : "e.g. Fancy / Party Wear, Casual Dresses, Girls' Fancy / Party Wear. Recommended so the piece appears in its category."}
                 onChange={(event) => set({ categoryId: event.target.value || department.id })}
               >
                 <option value="">None</option>

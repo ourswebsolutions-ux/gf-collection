@@ -34,7 +34,7 @@ export default async function CheckoutPage({ params }) {
           icon="bag"
           title={empty ? t("checkout.empty") : t("checkout.issues")}
           description={empty ? t("checkout.emptyText") : t("errors.stockChanged")}
-          action={<Button href={empty ? "/collections/new-arrivals" : "/cart"} arrow>{empty ? t("cart.continue") : t("checkout.reviewBag")}</Button>}
+          action={<Button href={empty ? "/collections/shop" : "/cart"} arrow>{empty ? t("cart.continue") : t("checkout.reviewBag")}</Button>}
         />
       </section>
     );

@@ -127,7 +127,7 @@ export function SelectMenu({ label, heading, value, options, onSelect, trigger, 
           ref={panelRef}
           style={shift ? { translate: `${shift}px 0` } : undefined}
           className={cn(
-            "absolute top-full z-50 mt-2 w-60 max-w-[calc(100vw-1.5rem)] animate-[menu-in_200ms_var(--ease-luxe)_both] border shadow-[0_24px_48px_-24px_rgb(11_11_10/0.5)]",
+            "absolute top-full z-50 mt-2 w-60 max-w-[calc(100vw-1.5rem)] animate-[menu-in_200ms_var(--ease-luxe)_both] border shadow-[0_24px_48px_-24px_rgb(28_26_23/0.5)]",
             align === "end" ? "end-0" : "start-0",
             dark ? "border-graphite bg-ink text-paper" : "border-line bg-paper text-ink",
           )}

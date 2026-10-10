@@ -3,7 +3,7 @@
 The editorial images in `public/images/storefront/` (homepage, collection banners, lookbook) are licensed
 stock photography from Unsplash under the [Unsplash License](https://unsplash.com/license) — free for
 commercial use, no attribution required (credited here anyway). Photos showing third-party brand marks
-were deliberately excluded. Swap them for 4 BRO campaign photography whenever it is available (same
+were deliberately excluded. Swap them for GF Collection campaign photography whenever it is available (same
 file names, or update `src/content/home.js` / `src/content/collections.js`).
 
 Product photography uploaded in the admin is served from Cloudinary.
@@ -52,7 +52,7 @@ Product photography uploaded in the admin is served from Cloudinary.
 4:5 crops (1000×1250) of Unsplash photographs under the [Unsplash License](https://unsplash.com/license)
 — free for commercial use, modifications allowed, no attribution required (credited here anyway).
 Photos were checked for third-party logos; where a brand mark appeared at the edge (kids hoodie shoes)
-it was cropped out. Replace with 4 BRO's own product photography when available (same file names).
+it was cropped out. Replace with GF Collection's own product photography when available (same file names).
 
 | File | Unsplash photo | Photographer |
 | --- | --- | --- |
@@ -99,3 +99,59 @@ it was cropped out. Replace with 4 BRO's own product photography when available 
 | `rose-gold-minimal-watch/2.jpg` | https://unsplash.com/photos/xfNeB1stZ_0 | Jaelynn Castillo |
 | `full-grain-leather-belt/1.jpg` | https://unsplash.com/photos/eNEa7Gsfzzs | Seeetz |
 | `full-grain-leather-belt/2.jpg` | https://unsplash.com/photos/qTv4ePux4ck | Seeetz |
+
+
+## GF Collection launch catalogue (women's and girls' dresses)
+
+`public/images/products/<slug>/<n>.jpg` for the catalogue in `prisma/seed-data/products.mjs` are 4:5
+crops (1000×1250) of free Unsplash photographs under the [Unsplash License](https://unsplash.com/license)
+(Unsplash+ / premium images were excluded). Image 1 is the full look; image 2 is a second shot of the
+same dress where the photographer published one, otherwise a closer detail crop of the same photograph.
+They are also used for the homepage and collection banners. Replace with GF Collection's own product
+photography when available (same file names).
+
+| Product | Unsplash photo(s) |
+| --- | --- |
+| `silver-sequin-one-shoulder-dress` | https://unsplash.com/photos/QwfgUwHoJDM, https://unsplash.com/photos/F5EO6OD9kBo |
+| `maroon-rosette-tulle-gown` | https://unsplash.com/photos/-NyPn9up_7o |
+| `burgundy-satin-mermaid-gown` | https://unsplash.com/photos/cqgSaFgMSqg |
+| `antique-gold-embellished-ball-gown` | https://unsplash.com/photos/jWqBLbcmT34 |
+| `black-satin-high-slit-gown` | https://unsplash.com/photos/77iyep3uIjg |
+| `crimson-satin-a-line-gown` | https://unsplash.com/photos/scTC9VKQPkk |
+| `red-embroidered-bridal-lehenga` | https://unsplash.com/photos/-4YUHtrI6rQ |
+| `mustard-maroon-embroidered-lehenga` | https://unsplash.com/photos/unFmQCqV8Ow |
+| `black-embellished-cocktail-dress` | https://unsplash.com/photos/4Wq31J1Ufpw |
+| `powder-blue-embroidered-gown` | https://unsplash.com/photos/Agv8AOnlKNU |
+| `navy-beaded-off-shoulder-gown` | https://unsplash.com/photos/EtAV0Z_PmqU |
+| `emerald-chiffon-wrap-maxi` | https://unsplash.com/photos/_vmoFgZc8c0 |
+| `olive-slip-maxi-dress` | https://unsplash.com/photos/VBZ3aYIbgc0 |
+| `chambray-button-front-sundress` | https://unsplash.com/photos/HPnJSg9BmtU |
+| `white-tiered-cotton-maxi` | https://unsplash.com/photos/JcWfwAIN0tc |
+| `black-floral-maxi-dress` | https://unsplash.com/photos/M2coD9ao2hA |
+| `tropical-print-off-shoulder-dress` | https://unsplash.com/photos/LDBikYMpvpw |
+| `grass-green-tiered-maxi` | https://unsplash.com/photos/wxLEHGeZKic |
+| `mint-tiered-long-sleeve-dress` | https://unsplash.com/photos/ukq1oxrHDW8 |
+| `ivory-crochet-midi-dress` | https://unsplash.com/photos/ZvP8wEnCQY8 |
+| `lavender-off-shoulder-maxi` | https://unsplash.com/photos/--qQDnWTTMo |
+| `sage-cotton-slip-dress` | https://unsplash.com/photos/UbrPTBBxaE8 |
+| `girls-scarlet-ruffle-party-dress` | https://unsplash.com/photos/yf-J_iKlFpY, https://unsplash.com/photos/kPXq-jxhMkk |
+| `girls-ivory-tulle-twirl-dress` | https://unsplash.com/photos/2aWxy11u-4w, https://unsplash.com/photos/GWOQd-5uas4, https://unsplash.com/photos/KqhcaUdlwzg, https://unsplash.com/photos/Z401mjfZ88U |
+| `girls-ivory-lace-sleeve-tulle-gown` | https://unsplash.com/photos/TPpolaqKOzQ, https://unsplash.com/photos/t3JNXE2KMfg |
+| `girls-blush-puff-sleeve-tulle-dress` | https://unsplash.com/photos/DCJgLUAgraQ |
+| `girls-midnight-star-tulle-dress` | https://unsplash.com/photos/GJ9ed5kqWqs |
+| `girls-rose-pink-layered-tulle-gown` | https://unsplash.com/photos/bvehDAS6QyM |
+| `girls-pink-ruffle-birthday-dress` | https://unsplash.com/photos/Yh7M9ikyxlw |
+| `girls-powder-blue-jacquard-dress` | https://unsplash.com/photos/AeL-0X_LHv0 |
+| `girls-aqua-tulle-princess-dress` | https://unsplash.com/photos/umKtBM1vhGc |
+| `girls-lilac-satin-flower-girl-dress` | https://unsplash.com/photos/oD3X-e4L2ac |
+| `girls-white-ruffle-off-shoulder-dress` | https://unsplash.com/photos/rbHxu3t-SJ0 |
+| `girls-coral-floral-cotton-dress` | https://unsplash.com/photos/tBWmzPuQo3w |
+| `girls-teal-print-fringe-sundress` | https://unsplash.com/photos/n_xeowqONag |
+| `girls-white-cotton-swing-dress` | https://unsplash.com/photos/QULXLcPNi5Y |
+| `girls-mint-chevron-sundress` | https://unsplash.com/photos/S_C_3a0iApE |
+| `girls-sunshine-yellow-sundress` | https://unsplash.com/photos/-4fmUtn5x8A |
+| `girls-tangerine-tutu-dress` | https://unsplash.com/photos/kpmqFB8flb0 |
+| `girls-green-leaf-print-ruffle-dress` | https://unsplash.com/photos/6l5GzS9_XVo |
+
+Product folders from earlier catalogues (men's, boys' and accessory items) are kept only because existing
+order history and archived products reference those image paths; they are not shown in the storefront.

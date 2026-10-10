@@ -45,6 +45,7 @@ export function CatalogResults({ state, facets, products, total, page, pageCount
 
   // Active filter chips (each removable).
   const chips = [
+    ...state.dept.map((slug) => ({ key: `d-${slug}`, label: facets.departments?.find((d) => d.slug === slug)?.name ?? slug, remove: { dept: state.dept.filter((v) => v !== slug), sub: [] } })),
     ...state.sub.map((slug) => ({ key: `sub-${slug}`, label: facets.subcategories.find((s) => s.slug === slug)?.name ?? slug, remove: { sub: state.sub.filter((v) => v !== slug) } })),
     ...state.gender.map((g) => ({ key: `g-${g}`, label: t(`filters.genders.${g}`), remove: { gender: state.gender.filter((v) => v !== g) } })),
     ...state.size.map((s) => ({ key: `s-${s}`, label: `${t("filters.size")}: ${s}`, remove: { size: state.size.filter((v) => v !== s) } })),
@@ -54,7 +55,7 @@ export function CatalogResults({ state, facets, products, total, page, pageCount
       : []),
     ...state.material.map((m) => ({ key: `m-${m}`, label: m, remove: { material: state.material.filter((v) => v !== m) } })),
     ...(state.inStock ? [{ key: "stock", label: t("filters.inStock"), remove: { inStock: false } }] : []),
-    ...state.flags.map((f) => ({ key: `f-${f}`, label: t({ sale: "filters.onSale", new: "filters.newArrival", best: "filters.bestSeller", featured: "filters.featured" }[f]), remove: { flags: state.flags.filter((v) => v !== f) } })),
+    ...state.flags.map((f) => ({ key: `f-${f}`, label: t({ sale: "filters.onSale", best: "filters.bestSeller", featured: "filters.featured" }[f]), remove: { flags: state.flags.filter((v) => v !== f) } })),
   ];
   const clearAll = () => navigate({ ...EMPTY_STATE, q: state.q, sort: state.sort });
 

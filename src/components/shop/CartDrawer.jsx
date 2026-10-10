@@ -72,7 +72,7 @@ export function CartDrawer() {
             </span>
             <p className="headline text-title">{t("cart.empty")}</p>
             <p className="max-w-xs text-sm text-subtle">{shop.status === "error" ? t("cart.loadError") : t("cart.emptyText")}</p>
-            <Button href="/collections/new-arrivals" arrow className="mt-3" onClick={close}>
+            <Button href="/collections/shop" arrow className="mt-3" onClick={close}>
               {t("cart.continue")}
             </Button>
           </div>

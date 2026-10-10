@@ -134,7 +134,7 @@ export function CategoryManager({ tree }) {
       </div>
 
       {tree.length === 0 ? (
-        <EmptyState icon="image" title="No categories yet" description="Create a department (e.g. Men), then add subcategories under it." />
+        <EmptyState icon="image" title="No categories yet" description="Create a department (e.g. Women or Girls / Kids), then add categories under it." />
       ) : (
         tree.map((department, index) => (
           <section key={department.id} className="border border-line bg-paper" aria-label={department.name}>

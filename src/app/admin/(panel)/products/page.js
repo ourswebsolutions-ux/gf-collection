@@ -19,7 +19,7 @@ const STATUSES = [
   { value: "DRAFT", label: "Draft" },
   { value: "ARCHIVED", label: "Archived" },
 ];
-const FLAG_LABELS = { featured: "Featured", newArrival: "New", bestSeller: "Best seller", onSale: "Sale" };
+const FLAG_LABELS = { featured: "Featured", bestSeller: "Best seller", onSale: "Sale" };
 
 function hrefWith(current, changes) {
   const params = new URLSearchParams({ ...current, ...changes });

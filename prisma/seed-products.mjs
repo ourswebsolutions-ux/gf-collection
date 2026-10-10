@@ -1,6 +1,8 @@
 // Launch catalogue seeder — `npm run prisma:db:products-seed`
 //
-// Adds the 20 curated 4 BRO products (5 per department) from prisma/seed-data/products.mjs.
+// Adds the GF Collection launch catalogue (women's and girls' dresses) from
+// prisma/seed-data/products.mjs, and archives products from earlier seed versions that
+// do not belong in this store (RETIRED_SLUGS) — archived, never deleted.
 // Production-safe and idempotent:
 //   - never deletes or resets anything; never touches orders, users, settings or other products;
 //   - products are matched by slug (and their style SKU), so re-running never duplicates;
@@ -17,7 +19,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { disconnectDb, getDb } from "../src/lib/db.js";
 import { createProduct } from "../src/services/productService.js";
-import { CATEGORY_TREE, PRODUCTS } from "./seed-data/products.mjs";
+import { CATEGORY_TREE, PRODUCTS, RETIRED_SLUGS } from "./seed-data/products.mjs";
 
 const REFRESH = process.argv.includes("--refresh");
 const PUBLIC_DIR = fileURLToPath(new URL("../public", import.meta.url));
@@ -57,7 +59,7 @@ function preflight() {
   const problems = [];
   const slugs = new Set();
   const skus = new Set();
-  const perDepartment = {};
+  const perCategory = {};
   for (const product of PRODUCTS) {
     if (slugs.has(product.slug)) problems.push(`duplicate slug ${product.slug}`);
     if (skus.has(product.sku)) problems.push(`duplicate SKU ${product.sku}`);
@@ -65,13 +67,17 @@ function preflight() {
     skus.add(product.sku);
     const department = Object.entries(CATEGORY_TREE).find(([, d]) => product.category in d.children)?.[0];
     if (!department) problems.push(`${product.slug}: unknown category ${product.category}`);
-    perDepartment[department] = (perDepartment[department] ?? 0) + 1;
+    perCategory[product.category] = (perCategory[product.category] ?? 0) + 1;
+    for (const colour of product.colours) {
+      if (Array.isArray(colour.stock) && colour.stock.length !== (colour.sizes ?? [null]).length) problems.push(`${product.slug}: stock/sizes length mismatch for ${colour.color}`);
+    }
+    if (product.salePrice && !(Number(product.salePrice) < Number(product.price))) problems.push(`${product.slug}: sale price must be below price`);
     product.images.forEach((_, index) => {
       if (!existsSync(`${PUBLIC_DIR}${imagePath(product.slug, index)}`)) problems.push(`missing image public${imagePath(product.slug, index)}`);
     });
   }
-  for (const department of Object.keys(CATEGORY_TREE)) {
-    if (perDepartment[department] !== 5) problems.push(`${department}: expected 5 products, found ${perDepartment[department] ?? 0}`);
+  for (const category of Object.values(CATEGORY_TREE).flatMap((d) => Object.keys(d.children))) {
+    if ((perCategory[category] ?? 0) < 3) problems.push(`${category}: expected at least 3 products, found ${perCategory[category] ?? 0}`);
   }
   if (problems.length) throw new Error(`Seed data check failed:\n  - ${problems.join("\n  - ")}`);
 }
@@ -171,7 +177,6 @@ async function seedProduct(db, product, categoryIds, report) {
       salePrice: product.salePrice ?? null,
       onSale: Boolean(product.onSale),
       featured: Boolean(product.featured),
-      newArrival: Boolean(product.newArrival),
       bestSeller: false,
       variants: variantsOf(product),
     });
@@ -202,7 +207,6 @@ async function seedProduct(db, product, categoryIds, report) {
         onSale: Boolean(product.onSale),
         effectivePrice: effectivePrice(product),
         featured: Boolean(product.featured),
-        newArrival: Boolean(product.newArrival),
       },
     });
     await syncImages(db, bySlug.id, product, { overwrite: true });
@@ -215,12 +219,21 @@ async function seedProduct(db, product, categoryIds, report) {
   (repaired ? report.repaired : report.skipped).push(repaired ? product.slug : `${product.slug} (already present — unchanged)`);
 }
 
-const report = { categoriesCreated: [], created: [], updated: [], repaired: [], skipped: [], failed: [], warnings: [] };
+/** Archive earlier seed products that do not belong in this store (orders keep their snapshots). */
+async function retireProducts(db, report) {
+  const rows = await db.product.findMany({ where: { slug: { in: RETIRED_SLUGS }, status: { not: "ARCHIVED" } }, select: { id: true, slug: true } });
+  if (!rows.length) return;
+  await db.product.updateMany({ where: { id: { in: rows.map((row) => row.id) } }, data: { status: "ARCHIVED", featured: false } });
+  report.archived.push(...rows.map((row) => row.slug));
+}
+
+const report = { categoriesCreated: [], created: [], updated: [], repaired: [], skipped: [], failed: [], warnings: [], archived: [] };
 
 try {
   preflight();
   const db = getDb();
   const categoryIds = await ensureCategories(db, report);
+  await retireProducts(db, report);
   for (const product of PRODUCTS) {
     try {
       await seedProduct(db, product, categoryIds, report);
@@ -229,11 +242,12 @@ try {
     }
   }
 
-  console.log(`\n4 BRO launch catalogue — ${PRODUCTS.length} products${REFRESH ? " (refresh)" : ""}`);
+  console.log(`\nGF Collection launch catalogue — ${PRODUCTS.length} products${REFRESH ? " (refresh)" : ""}`);
   console.log(`  ✓ categories created: ${report.categoriesCreated.length}${report.categoriesCreated.length ? ` (${report.categoriesCreated.join(", ")})` : ""}`);
   console.log(`  ✓ products created:   ${report.created.length}`);
   if (REFRESH) console.log(`  ✓ products updated:   ${report.updated.length}`);
   console.log(`  ✓ products repaired:  ${report.repaired.length}${report.repaired.length ? ` (${report.repaired.join(", ")})` : ""}`);
+  console.log(`  ✓ products archived:  ${report.archived.length}${report.archived.length ? ` (${report.archived.join(", ")})` : ""}`);
   console.log(`  – products skipped:   ${report.skipped.length}`);
   for (const line of report.skipped) console.log(`      ${line}`);
   for (const line of report.warnings) console.log(`  ! ${line}`);

@@ -25,7 +25,7 @@ export function WishlistView({ items }) {
         title={t("wishlist.empty")}
         description={t("wishlist.emptyText")}
         action={
-          <Button href="/collections/new-arrivals" arrow>
+          <Button href="/collections/shop" arrow>
             {t("wishlist.discover")}
           </Button>
         }

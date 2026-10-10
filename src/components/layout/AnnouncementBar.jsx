@@ -5,7 +5,7 @@ export function AnnouncementBar({ message, link }) {
   if (!message) return null;
 
   return (
-    <div className="bg-ink-soft text-mist">
+    <div className="bg-ink text-paper/80">
       <div className="container-page flex min-h-10 items-center justify-center gap-x-4 py-2 text-center">
         <p className="eyebrow !text-[0.625rem] !tracking-[0.24em]">
           <span>{message}</span>
@@ -16,7 +16,7 @@ export function AnnouncementBar({ message, link }) {
               </span>
               <Link
                 href={link.href}
-                className="ms-3 inline-block py-1.5 text-gold underline-offset-4 transition-colors hover:text-gold-light hover:underline sm:ms-0"
+                className="ms-3 inline-block py-1.5 text-gold-light underline-offset-4 transition-colors hover:text-paper hover:underline sm:ms-0"
               >
                 {link.label}
               </Link>

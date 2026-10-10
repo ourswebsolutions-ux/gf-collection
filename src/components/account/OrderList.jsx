@@ -17,7 +17,7 @@ export function OrderList({ orders, t, locale }) {
         title={t("account.noOrders")}
         description={t("account.noOrdersText")}
         action={
-          <Button href="/collections/new-arrivals" arrow>
+          <Button href="/collections/shop" arrow>
             {t("cart.continue")}
           </Button>
         }

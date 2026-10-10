@@ -8,7 +8,7 @@ import { useCurrency } from "./CurrencyProvider";
 const SYMBOL = { PKR: "Rs", USD: "$" };
 
 /** PKR / USD dropdown (separate from language). Hidden when no USD rate is configured. */
-export function CurrencyMenu({ tone = "dark", align = "end", className }) {
+export function CurrencyMenu({ tone = "light", align = "end", className }) {
   const t = useT();
   const { currency, available, setCurrency } = useCurrency();
   if (available.length < 2) return null;

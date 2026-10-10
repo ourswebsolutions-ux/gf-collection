@@ -4,6 +4,7 @@ import { ImagePlaceholder, SmartImage } from "@/components/media/SmartImage";
 import { useT } from "@/i18n/I18nProvider";
 import Link from "@/i18n/Link";
 import { cn } from "@/utils/cn";
+import { departmentText } from "@/utils/department";
 import { FavoriteButton } from "./FavoriteButton";
 import { getProductBadges, ProductBadge } from "./ProductBadge";
 import { ProductPrice } from "./ProductPrice";
@@ -28,7 +29,7 @@ export function ProductCard({ product, preload = false, className }) {
       {/* Fixed 4:5 frame → consistent grid, zero layout shift. */}
       <div
         {...tiltHandlers}
-        className="tilt relative aspect-[4/5] overflow-hidden bg-bone group-hover:shadow-[0_24px_48px_-28px_rgb(11_11_10/0.45)]"
+        className="tilt relative aspect-[4/5] overflow-hidden bg-bone group-hover:shadow-[0_24px_48px_-28px_rgb(28_26_23/0.45)]"
       >
         <Link href={product.href} className="absolute inset-0" tabIndex={-1} aria-hidden="true">
           {primary ? (
@@ -84,7 +85,13 @@ export function ProductCard({ product, preload = false, className }) {
       </div>
 
       <div className="flex flex-col gap-1.5 pt-4">
-        {product.category ? <p className="eyebrow !text-[0.625rem] text-mute">{product.category.name}</p> : null}
+        {product.category ? (
+          // Department (rose for Women, lilac for Girls) above the category, so every card says where it belongs.
+          <p className="eyebrow flex flex-col gap-0.5 !text-[0.625rem] !tracking-[0.2em] text-mute">
+            {product.department ? <span className={departmentText(product.department.slug)}>{product.department.name}</span> : null}
+            {product.department?.slug !== product.category.slug ? <span className="truncate">{product.category.name}</span> : null}
+          </p>
+        ) : null}
         <h3 className="text-[0.9375rem] leading-snug">
           <Link href={product.href} className="inline-block py-1 underline-offset-4 hover:underline">
             {product.name}

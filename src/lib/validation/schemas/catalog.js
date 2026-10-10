@@ -62,7 +62,6 @@ export const productInputSchema = z
     price: moneySchema,
     salePrice: blankToNull(moneySchema),
     featured: z.boolean().default(false),
-    newArrival: z.boolean().default(false),
     bestSeller: z.boolean().default(false),
     onSale: z.boolean().default(false),
     seoTitle: optionalText(70),
@@ -98,7 +97,6 @@ export const productStatusSchema = z.enum(PRODUCT_STATUSES);
 export const productFlagsSchema = z
   .object({
     featured: z.boolean(),
-    newArrival: z.boolean(),
     bestSeller: z.boolean(),
     onSale: z.boolean(),
   })

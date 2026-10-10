@@ -17,7 +17,7 @@ export default async function ResetPasswordPage({ params, searchParams }) {
   return (
     <div className="flex flex-col gap-10">
       <header className="flex flex-col gap-3">
-        <p className="eyebrow text-gold-deep">4 BRO</p>
+        <p className="eyebrow text-gold-deep">GF Collection</p>
         <h1 className="headline text-display-sm">{t("auth.resetTitle")}</h1>
         {valid ? <p className="text-sm leading-relaxed text-subtle">{t("auth.resetIntro")}</p> : null}
       </header>

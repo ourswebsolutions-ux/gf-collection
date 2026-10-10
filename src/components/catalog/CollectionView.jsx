@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { getCollection } from "@/data/catalog";
 import Link from "@/i18n/Link";
 import { getTranslator } from "@/i18n/server";
+import { cn } from "@/utils/cn";
 import { createMetadata } from "@/utils/seo";
 import { CatalogResults } from "./CatalogResults";
 
@@ -31,7 +32,21 @@ export async function CollectionView({ slug, locale, query }) {
   if (!result) notFound();
 
   const { collection, state, facets, products, total, page, pageCount, salesData, usdRate } = result;
-  const subNav = facets.subcategories;
+
+  // Quick links under the title (thumb-friendly on phones): departments on cross-department
+  // listings, the department's categories on a department page, sibling categories on a category page.
+  let quickLinks = [];
+  if (facets.departments?.length > 1) {
+    quickLinks = facets.departments.map((department) => ({ href: `/collections/${department.slug}`, label: department.name }));
+  } else if (facets.subcategories.length) {
+    quickLinks = [{ href: `/collections/${slug}`, label: t("collection.all"), active: true }, ...facets.subcategories.map((sub) => ({ href: `/collections/${sub.slug}`, label: sub.name }))];
+  } else if (collection.siblings?.length > 1 && collection.parent) {
+    quickLinks = [
+      { href: `/collections/${collection.parent.slug}`, label: t("collection.all") },
+      ...collection.siblings.map((sibling) => ({ href: `/collections/${sibling.slug}`, label: sibling.name, active: sibling.slug === slug })),
+    ];
+  }
+  const accent = collection.department === "girls" ? "text-girls-tint" : collection.department === "women" ? "text-women-tint" : "text-gold-light";
 
   return (
     <>
@@ -64,7 +79,7 @@ export async function CollectionView({ slug, locale, query }) {
               </li>
             </ol>
           </nav>
-          <p className="eyebrow flex animate-reveal items-center gap-3 text-gold">
+          <p className={cn("eyebrow flex animate-reveal items-center gap-3", accent)}>
             <span className="rule-gold" aria-hidden="true" />
             {collection.eyebrow}
           </p>
@@ -73,12 +88,12 @@ export async function CollectionView({ slug, locale, query }) {
             <p className="eyebrow tabular-nums text-paper/70">{t(total === 1 ? "collection.piece" : "collection.pieces", { count: total })}</p>
           </div>
           {collection.description ? <p className="max-w-xl animate-reveal text-[0.9375rem] leading-relaxed text-paper/75 [animation-delay:160ms]">{collection.description}</p> : null}
-          {subNav.length ? (
+          {quickLinks.length ? (
             <ul className="scrollbar-none -mx-[clamp(1rem,4vw,3.5rem)] mt-2 flex gap-2 overflow-x-auto px-[clamp(1rem,4vw,3.5rem)]">
-              {subNav.map((sub) => (
-                <li key={sub.slug} className="shrink-0">
-                  <Button href={`/collections/${sub.slug}`} variant="outline-light" size="sm">
-                    {sub.name}
+              {quickLinks.map((link) => (
+                <li key={link.href} className="shrink-0">
+                  <Button href={link.href} variant={link.active ? "light" : "outline-light"} size="sm" aria-current={link.active ? "page" : undefined}>
+                    {link.label}
                   </Button>
                 </li>
               ))}
@@ -101,8 +116,8 @@ export async function CollectionView({ slug, locale, query }) {
           salesData={salesData}
           usdRate={usdRate}
           emptyAction={
-            <Button href="/collections/new-arrivals" arrow>
-              {t("collection.shopNewArrivals")}
+            <Button href="/collections/shop" arrow>
+              {t("collection.shopAll")}
             </Button>
           }
         />

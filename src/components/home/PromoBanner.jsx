@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
  */
 export function PromoBanner({ content }) {
   return (
-    <section aria-labelledby="promo-title" className="bg-white">
+    <section aria-labelledby="promo-title" className="bg-bone">
       <div className="grid md:grid-cols-2">
         <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[38rem]">
           <Image src={content.image.src} alt={content.image.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />

@@ -1,25 +1,33 @@
 // Storefront navigation — single source for header, mobile menu and footer.
-// Department/collection slugs map to /collections/[slug] (see src/content/collections.js).
-// `labelKey` is the translation key (src/i18n/dictionaries); `label` is the English fallback.
+// Department/collection slugs map to /collections/[slug] (see src/content/collections.js
+// and the category structure in prisma/seed.mjs). `labelKey` is the translation key
+// (src/i18n/dictionaries); `label` is the English fallback. `tone` picks the
+// department accent (Women = rose, Girls / Kids = lilac). The store sells
+// women's and girls' clothing only.
 
 export const departments = [
-  { label: "Men", labelKey: "nav.men", href: "/collections/men" },
-  { label: "Women", labelKey: "nav.women", href: "/collections/women" },
-  { label: "Kids", labelKey: "nav.kids", href: "/collections/kids" },
   {
-    label: "Accessories", labelKey: "nav.accessories",
-    href: "/collections/accessories",
+    label: "Women", labelKey: "nav.women",
+    href: "/collections/women",
+    tone: "women",
     children: [
-      { label: "Watches", labelKey: "nav.watches", href: "/collections/watches" },
-      { label: "Perfumes", labelKey: "nav.perfumes", href: "/collections/perfumes" },
-      { label: "Hand Bags", labelKey: "nav.handbags", href: "/collections/handbags" },
-      { label: "Bags", labelKey: "nav.bags", href: "/collections/bags" },
+      { label: "Fancy / Party Wear", labelKey: "nav.womenParty", href: "/collections/women-fancy-party-wear" },
+      { label: "Casual Dresses", labelKey: "nav.womenCasual", href: "/collections/women-casual" },
+    ],
+  },
+  {
+    label: "Girls / Kids", labelKey: "nav.girls",
+    href: "/collections/girls",
+    tone: "girls",
+    children: [
+      { label: "Girls' Fancy / Party Wear", labelKey: "nav.girlsParty", href: "/collections/girls-fancy-party-wear" },
+      { label: "Girls' Casual Dresses", labelKey: "nav.girlsCasual", href: "/collections/girls-casual" },
     ],
   },
 ];
 
 export const highlights = [
-  { label: "New Arrivals", labelKey: "nav.newArrivals", href: "/collections/new-arrivals" },
+  { label: "Shop All", labelKey: "nav.shopAll", href: "/collections/shop" },
   { label: "Sale", labelKey: "nav.sale", href: "/collections/sale", accent: true },
 ];
 
@@ -34,11 +42,13 @@ export const footerNavigation = [
   {
     titleKey: "footer.columns.shop",
     links: [
-      { labelKey: "footer.links.men", href: "/collections/men" },
       { labelKey: "footer.links.women", href: "/collections/women" },
-      { labelKey: "footer.links.kids", href: "/collections/kids" },
-      { labelKey: "footer.links.accessories", href: "/collections/accessories" },
-      { labelKey: "footer.links.newArrivals", href: "/collections/new-arrivals" },
+      { labelKey: "footer.links.womenParty", href: "/collections/women-fancy-party-wear" },
+      { labelKey: "footer.links.womenCasual", href: "/collections/women-casual" },
+      { labelKey: "footer.links.girls", href: "/collections/girls" },
+      { labelKey: "footer.links.girlsParty", href: "/collections/girls-fancy-party-wear" },
+      { labelKey: "footer.links.girlsCasual", href: "/collections/girls-casual" },
+      { labelKey: "footer.links.shopAll", href: "/collections/shop" },
       { labelKey: "footer.links.sale", href: "/collections/sale" },
     ],
   },

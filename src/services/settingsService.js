@@ -237,7 +237,7 @@ export function sendWhatsAppTest(to, actor) {
   return runTest("WHATSAPP", "message", actor, async () => {
     const { messageId } = await sendWhatsAppText({
       to: recipient,
-      text: `*4 BRO — test message*\n\nThis is a test from the 4 BRO admin settings (${new Date().toUTCString()}). WhatsApp notifications are working. No action is needed.`,
+      text: `*GF Collection — test message*\n\nThis is a test from the GF Collection admin settings (${new Date().toUTCString()}). WhatsApp notifications are working. No action is needed.`,
     });
     return `Test message sent to ${maskNumber(recipient)}${messageId ? ` (id ${messageId.slice(0, 24)})` : ""}.`;
   });
@@ -255,8 +255,8 @@ export function testSmtp(to, actor) {
     const { fromName, fromEmail } = await getSmtpConfig();
     await sendEmail({
       to: recipient,
-      subject: "4 BRO — SMTP test",
-      text: `This is a test email from the 4 BRO admin settings (${new Date().toUTCString()}).\n\nSender: ${fromName} <${fromEmail}>\nEmail notifications are configured correctly. No action is needed.`,
+      subject: "GF Collection — SMTP test",
+      text: `This is a test email from the GF Collection admin settings (${new Date().toUTCString()}).\n\nSender: ${fromName} <${fromEmail}>\nEmail notifications are configured correctly. No action is needed.`,
     });
     return `SMTP verified and a test email was sent to ${recipient}.`;
   });

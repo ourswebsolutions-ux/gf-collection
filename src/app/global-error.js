@@ -12,21 +12,21 @@ export default function GlobalError({ error, retry }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#faf8f4",
-          color: "#0d0d0c",
+          background: "#fbf8f3",
+          color: "#1c1a17",
           fontFamily: "ui-sans-serif, system-ui, sans-serif",
           padding: "1.5rem",
         }}
       >
-        <title>Something went wrong | 4 BRO</title>
+        <title>Something went wrong | GF Collection</title>
         <main style={{ maxWidth: "28rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           <p style={{ fontSize: "0.6875rem", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 600 }}>
-            4 BRO
+            GF Collection
           </p>
           <h1 style={{ fontFamily: "Georgia, serif", fontWeight: 300, fontSize: "2.25rem", margin: 0 }}>
             Something went wrong.
           </h1>
-          <p style={{ fontSize: "0.875rem", color: "#5f5a53", margin: 0 }}>
+          <p style={{ fontSize: "0.875rem", color: "#514a42", margin: 0 }}>
             Please try again in a moment.{error?.digest ? ` Reference: ${error.digest}` : ""}
           </p>
           <button
@@ -34,8 +34,8 @@ export default function GlobalError({ error, retry }) {
             onClick={() => retry()}
             style={{
               alignSelf: "flex-start",
-              background: "#0d0d0c",
-              color: "#faf8f4",
+              background: "#1c1a17",
+              color: "#fbf8f3",
               border: 0,
               height: "3rem",
               padding: "0 1.75rem",

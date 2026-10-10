@@ -1,5 +1,5 @@
 // Edge of the app, runs before routing:
-//  1. Locale routing — English is unprefixed (/collections/men → internal /en/…),
+//  1. Locale routing — English is unprefixed (/collections/women → internal /en/…),
 //     Urdu/Hindi are prefixed (/ur/…, /hi/…); /en/… redirects to the canonical URL.
 //     A saved language cookie redirects unprefixed URLs to the visitor's language.
 //  2. Optimistic auth redirects (no session cookie → login). This is a UX layer
@@ -11,8 +11,20 @@ import { localizeHref, splitLocale } from "./i18n/navigation.js";
 const SESSION_COOKIES = ["__Host-4bro_session", "4bro_session"];
 const hasSessionCookie = (request) => SESSION_COOKIES.some((name) => request.cookies.has(name));
 
-// Friendly department URLs → canonical collection pages.
-const SHORTCUTS = { "/men": "/collections/men", "/women": "/collections/women", "/kids": "/collections/kids", "/accessories": "/collections/accessories" };
+// Friendly department URLs → canonical collection pages. The retired "New Arrivals"
+// collection permanently points to Shop all, so old links and bookmarks never 404.
+const SHORTCUTS = {
+  "/women": "/collections/women",
+  "/girls": "/collections/girls",
+  "/kids": "/collections/girls",
+  // Earlier "Kids" URLs → the girls-only department.
+  "/collections/kids": "/collections/girls",
+  "/collections/kids-girls-party-wear": "/collections/girls-fancy-party-wear",
+  "/collections/kids-girls-casual": "/collections/girls-casual",
+  "/shop": "/collections/shop",
+  "/sale": "/collections/sale",
+  "/collections/new-arrivals": "/collections/shop",
+};
 
 export function proxy(request) {
   const { pathname, search } = request.nextUrl;

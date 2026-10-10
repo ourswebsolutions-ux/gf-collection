@@ -1,8 +1,7 @@
 import { cn } from "@/utils/cn";
 
 const STYLES = {
-  new: "bg-paper text-ink",
-  bestSeller: "bg-ink text-gold",
+  bestSeller: "bg-ink text-gold-light",
   featured: "bg-ink text-paper",
   sale: "bg-gold text-ink",
   soldOut: "bg-ink/85 text-paper",
@@ -27,7 +26,6 @@ export function getProductBadges(product, t) {
   if (product.badges.isOnSale) {
     badges.push({ variant: "sale", label: product.price.discountPercent ? `−${product.price.discountPercent}%` : t("product.badge.sale") });
   }
-  if (product.badges.isNew) badges.push({ variant: "new", label: t("product.badge.new") });
   if (product.badges.isBestSeller) badges.push({ variant: "bestSeller", label: t("product.badge.bestSeller") });
   if (product.badges.isFeatured) badges.push({ variant: "featured", label: t("product.badge.featured") });
   return badges.slice(0, 2);

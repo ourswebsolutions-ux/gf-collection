@@ -31,7 +31,7 @@ export function AdminMobileMenu({ admin }) {
       </button>
       <Drawer open={open} onClose={() => setOpen(false)} label="Admin menu" side="start" className="max-w-xs">
         <div className="flex h-full flex-col overflow-y-auto px-6 pb-8 pt-16">
-          <p className="eyebrow mb-4 text-mute">4 BRO Admin</p>
+          <p className="eyebrow mb-4 text-mute">GF Collection Admin</p>
           <nav aria-label="Admin" className="flex flex-col">
             {NAV_ITEMS.map((item) => {
               const active = isActive(item, pathname);

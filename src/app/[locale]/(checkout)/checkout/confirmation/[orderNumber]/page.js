@@ -55,7 +55,7 @@ export default async function ConfirmationPage({ params }) {
                 <Icon name="package" className="size-4" />
                 {t("order.track")}
               </Button>
-              <Button href="/collections/new-arrivals" variant="secondary" arrow>
+              <Button href="/collections/shop" variant="secondary" arrow>
                 {t("order.continue")}
               </Button>
             </>

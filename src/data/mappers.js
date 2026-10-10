@@ -71,12 +71,13 @@ export function toProductCard(record, { usdRate = null } = {}) {
     name: record.name,
     href: `/products/${record.slug}`,
     category: record.category ? { name: record.category.name, slug: record.category.slug } : null,
+    // Women | Girls: the category's department (or the category itself when filed at the top level).
+    department: record.category ? (record.category.parent ? { name: record.category.parent.name, slug: record.category.parent.slug } : { name: record.category.name, slug: record.category.slug }) : null,
     gender: record.gender,
     price,
     // Cards only need the primary + hover image.
     images: imagesOf(record).slice(0, 2),
     badges: {
-      isNew: Boolean(record.newArrival),
       isBestSeller: Boolean(record.bestSeller),
       isOnSale: price.compareAt !== null,
       isFeatured: Boolean(record.featured),

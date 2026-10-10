@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 
-/** Dark editorial brand statement around "Create Your Legacy". */
+/** Espresso editorial band: the GF Collection brand statement (the one dark moment on the homepage). */
 export function BrandStory({ content }) {
   return (
     <section aria-labelledby="brand-story-title" className="bg-ink text-paper">

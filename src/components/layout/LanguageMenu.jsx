@@ -15,7 +15,7 @@ const SHORT = { en: "EN", ur: "اردو", hi: "हिन्दी" };
  * chosen language (query kept) and remembers the choice in a cookie, which the
  * proxy uses to send returning visitors to their language.
  */
-export function LanguageMenu({ tone = "dark", align = "end", compact = false, className }) {
+export function LanguageMenu({ tone = "light", align = "end", compact = false, className }) {
   const t = useT();
   const locale = useLocale();
   const router = useRouter();

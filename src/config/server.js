@@ -18,7 +18,7 @@ export const authConfig = {
 
 export const servicesConfig = {
   email: {
-    senderName: "4 BRO",
+    senderName: "GF Collection",
     timeoutMs: 15_000,
   },
   whatsapp: {
@@ -28,8 +28,8 @@ export const servicesConfig = {
   },
   cloudinary: {
     folders: {
-      products: "4bro/products",
-      categories: "4bro/categories",
+      products: "gf-collection/products",
+      categories: "gf-collection/categories",
     },
     // Upper bound for a single uploaded image. Kept below the proxy's request-body
     // buffer (next.config.mjs → proxyClientMaxBodySize) so uploads are never truncated.

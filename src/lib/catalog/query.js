@@ -1,6 +1,6 @@
 // URL ⇄ catalogue filter state. Isomorphic (server pages parse it; client filter UI builds it).
 //
-//   /collections/men?sub=men-t-shirts&size=M,L&color=black&min=2000&max=6000&stock=in&sort=price-low
+//   /collections/shop?dept=women&sub=women-casual&size=M,L&color=black&min=2000&max=6000&stock=in&sort=price-low
 //
 // Unknown or malformed values are dropped silently, so a hand-edited or stale URL
 // can never break a page. Price bounds are entered in the shopper's display currency
@@ -18,8 +18,8 @@ export const SORT_OPTIONS = [
 ];
 export const DEFAULT_SORT = "featured";
 
-const GENDERS = ["men", "women", "kids", "unisex"];
-const FLAGS = { sale: "onSale", new: "newArrival", best: "bestSeller", featured: "featured" };
+const GENDERS = ["women", "kids", "unisex"];
+const FLAGS = { sale: "onSale", best: "bestSeller", featured: "featured" };
 const MAX_VALUES = 20;
 const TOKEN = /^[\p{L}\p{N}][\p{L}\p{N} .\-/&+%#'()]{0,59}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -55,6 +55,7 @@ export function parseCatalogQuery(params, { usdRate = null } = {}) {
 
   const state = {
     q: single(params, "q").slice(0, 80),
+    dept: list(params, "dept", SLUG),
     sub: list(params, "sub", SLUG),
     gender: list(params, "gender").map((value) => value.toLowerCase()).filter((value) => GENDERS.includes(value)),
     size: list(params, "size"),
@@ -73,6 +74,7 @@ export function parseCatalogQuery(params, { usdRate = null } = {}) {
 
   const filter = {
     ...(state.q && { search: state.q }),
+    ...(state.dept.length && { departments: state.dept }),
     ...(state.sub.length && { subcategories: state.sub }),
     ...(state.gender.length && { gender: state.gender.map((value) => value.toUpperCase()) }),
     ...(state.size.length && { sizes: state.size }),
@@ -89,14 +91,14 @@ export function parseCatalogQuery(params, { usdRate = null } = {}) {
 
 /** Number of user-applied filters (for "Filters (3)" labels). */
 export function countActiveFilters(state) {
-  return state.sub.length + state.gender.length + state.size.length + state.color.length + state.material.length + state.flags.length + (state.inStock ? 1 : 0) + (state.min || state.max ? 1 : 0);
+  return state.dept.length + state.sub.length + state.gender.length + state.size.length + state.color.length + state.material.length + state.flags.length + (state.inStock ? 1 : 0) + (state.min || state.max ? 1 : 0);
 }
 
 /** Serialise state back to a canonical query string (stable order, defaults omitted). */
 export function serializeCatalogQuery(state) {
   const params = new URLSearchParams();
   if (state.q) params.set("q", state.q);
-  for (const key of ["sub", "gender", "size", "color", "material"]) if (state[key]?.length) params.set(key, state[key].join(","));
+  for (const key of ["dept", "sub", "gender", "size", "color", "material"]) if (state[key]?.length) params.set(key, state[key].join(","));
   if (state.min) params.set("min", state.min);
   if (state.max) params.set("max", state.max);
   if ((state.min || state.max) && state.currency && state.currency !== BASE_CURRENCY) params.set("cur", state.currency.toLowerCase());
@@ -109,4 +111,4 @@ export function serializeCatalogQuery(state) {
   return query ? `?${query.replace(/%2C/gi, ",")}` : "";
 }
 
-export const EMPTY_STATE = { q: "", sub: [], gender: [], size: [], color: [], material: [], inStock: false, flags: [], min: "", max: "", currency: BASE_CURRENCY, sort: DEFAULT_SORT, page: 1 };
+export const EMPTY_STATE = { q: "", dept: [], sub: [], gender: [], size: [], color: [], material: [], inStock: false, flags: [], min: "", max: "", currency: BASE_CURRENCY, sort: DEFAULT_SORT, page: 1 };

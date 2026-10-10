@@ -44,8 +44,8 @@ export const diagnostics = {
       if (!sendTo) return "SMTP connection and authentication verified";
       const { messageId } = await sendEmail({
         to: sendTo,
-        subject: "4 BRO — SMTP test",
-        text: "This is a test message from the 4 BRO platform. SMTP is configured correctly.",
+        subject: "GF Collection — SMTP test",
+        text: "This is a test message from the GF Collection platform. SMTP is configured correctly.",
       });
       return `Test email sent (messageId ${messageId})`;
     }),
@@ -58,7 +58,7 @@ export const diagnostics = {
       if (!adminNumber) throw new Error("No admin WhatsApp number is set — no number to test with");
       await sendWhatsAppText({
         to: adminNumber,
-        text: `4 BRO — WhatsApp integration test (${new Date().toISOString()})`,
+        text: `GF Collection — WhatsApp integration test (${new Date().toISOString()})`,
       });
       return "Test message sent to the admin number";
     }),

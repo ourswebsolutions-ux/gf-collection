@@ -138,7 +138,7 @@ export function SearchField({ defaultValue = "", autoFocus = false, onNavigate, 
       </div>
 
       {showList ? (
-        <ul id={`${listId}-list`} role="listbox" className="absolute inset-x-0 top-full z-30 mt-2 max-h-[60vh] animate-[fade_200ms_ease-out] overflow-y-auto border border-line bg-paper py-2 shadow-[0_18px_40px_-20px_rgb(11_11_10/0.35)]">
+        <ul id={`${listId}-list`} role="listbox" className="absolute inset-x-0 top-full z-30 mt-2 max-h-[60vh] animate-[fade_200ms_ease-out] overflow-y-auto border border-line bg-paper py-2 shadow-[0_18px_40px_-20px_rgb(28_26_23/0.35)]">
           {suggestions.length === 0 ? (
             <li className="px-4 py-3 text-sm text-mute">{state.status === "error" ? t("search.unavailable") : state.status === "loading" ? t("common.loading") : t("search.noResults", { query: trimmed })}</li>
           ) : (

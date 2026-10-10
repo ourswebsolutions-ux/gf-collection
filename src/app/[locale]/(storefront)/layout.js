@@ -18,14 +18,14 @@ export default async function StorefrontLayout({ children, params }) {
       <ShopProvider>
         {/* Decides before first paint whether this visit gets the intro (once per session). */}
         <script dangerouslySetInnerHTML={{ __html: WELCOME_GATE }} />
-        <WelcomeSplash skipLabel={t("welcome.skip")} />
+        <WelcomeSplash skipLabel={t("welcome.skip")} tagline={t("brand.tagline")} />
         <a
           href="#main"
           className="eyebrow sr-only z-50 bg-gold px-4 py-3 text-ink focus:not-sr-only focus:fixed focus:start-4 focus:top-4"
         >
           {t("common.skipToContent")}
         </a>
-        <AnnouncementBar message={t("announcement.message")} link={{ label: t("collection.shopNewArrivals"), href: "/collections/new-arrivals" }} />
+        <AnnouncementBar message={t("announcement.message")} link={{ label: t("collection.shopAll"), href: "/collections/shop" }} />
         <SiteHeader contact={contact} locale={locale} />
         <main id="main" className="flex flex-1 flex-col">
           {children}

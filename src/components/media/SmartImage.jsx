@@ -37,7 +37,7 @@ export function ImagePlaceholder({ className, label }) {
   return (
     <div role={label ? "img" : undefined} aria-label={label} className={cn("grid place-items-center bg-bone", className)}>
       {/* eslint-disable-next-line @next/next/no-img-element -- tiny static brand mark */}
-      <img src="/brand/logo-mark.png" alt="" aria-hidden="true" className="w-1/4 max-w-24 opacity-25 grayscale" />
+      <img src="/brand/gf-mark.png" alt="" aria-hidden="true" className="w-1/4 max-w-24 opacity-30 grayscale" />
     </div>
   );
 }

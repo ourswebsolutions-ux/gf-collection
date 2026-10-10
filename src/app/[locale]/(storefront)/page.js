@@ -1,4 +1,3 @@
-import { AccessoriesSection } from "@/components/home/AccessoriesSection";
 import { BrandStory } from "@/components/home/BrandStory";
 import { CategorySwitcher } from "@/components/home/CategorySwitcher";
 import { CollectionSection } from "@/components/home/CollectionSection";
@@ -8,7 +7,7 @@ import { ProductShowcase } from "@/components/home/ProductShowcase";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { siteConfig } from "@/config/site";
 import { getHomeContent } from "@/content/home";
-import { getBestSellers, getFeaturedProducts, getNewArrivals } from "@/data/catalog";
+import { getBestSellers, getCategoryProducts, getFeaturedProducts, getSaleProducts } from "@/data/catalog";
 import { getTranslator } from "@/i18n/server";
 import { getPublicContact } from "@/lib/settings";
 import { createMetadata } from "@/utils/seo";
@@ -29,7 +28,7 @@ function OrganizationJsonLd({ social }) {
       "@type": "Organization",
       name: siteConfig.name,
       url: siteConfig.url,
-      logo: `${siteConfig.url}/brand/logo-full.png`,
+      logo: `${siteConfig.url}/brand/gf-logo.png`,
       slogan: siteConfig.tagline,
       description: siteConfig.description,
       ...(social.length && { sameAs: social.map((item) => item.href) }),
@@ -57,33 +56,49 @@ function OrganizationJsonLd({ social }) {
 
 export default async function HomePage({ params }) {
   const { locale } = await params;
-  const [t, newArrivals, featured, bestSellers] = await Promise.all([
+  const [t, party, casual, girlsParty, girlsCasual, featured, sale, bestSellers] = await Promise.all([
     getTranslator(locale),
-    getNewArrivals({ limit: 8, locale }),
+    getCategoryProducts("women-fancy-party-wear", { limit: 4, locale }),
+    getCategoryProducts("women-casual", { limit: 4, locale }),
+    getCategoryProducts("girls-fancy-party-wear", { limit: 4, locale }),
+    getCategoryProducts("girls-casual", { limit: 4, locale }),
     getFeaturedProducts({ limit: 4, locale }),
+    getSaleProducts({ limit: 4, locale }),
     getBestSellers({ limit: 4, locale }),
   ]);
   const content = getHomeContent(t);
   const { showcase } = content;
   const { social } = await getPublicContact();
   const instagram = social.find((item) => item.name === "Instagram");
+  // Product rails appear only when the database has pieces for them (never an empty rail);
+  // a brand-new store shows a single "coming soon" rail instead.
+  const hasProducts = party.length + casual.length + girlsParty.length + girlsCasual.length > 0;
 
   return (
     <>
       <OrganizationJsonLd social={social} />
       <Hero content={content.hero} />
-      <CategorySwitcher items={content.departments.items} heading={content.departments.heading} shopLabel={content.departments.shopLabel} />
-      <CollectionSection id="collection-men" content={content.featuredCollections.men} />
-      <CollectionSection id="collection-women" content={content.featuredCollections.women} reverse tone="bone" />
-      <ProductShowcase id="new-arrivals-title" content={showcase.newArrivals} empty={showcase.empty} products={newArrivals} />
-      {/* Featured appears only when the team has flagged pieces (no empty rail). */}
-      {featured.length ? <ProductShowcase id="featured-title" content={showcase.featured} empty={showcase.empty} products={featured} tone="bone" /> : null}
-      <CollectionSection id="collection-kids" content={content.featuredCollections.kids} tone={featured.length ? "paper" : "bone"} />
-      <AccessoriesSection content={content.accessoriesFeature} />
-      {/* Best sellers appear once real sales (or flagged pieces) exist — never an empty rail. */}
-      {bestSellers.length ? <ProductShowcase id="best-sellers-title" content={showcase.bestSellers} empty={showcase.empty} products={bestSellers} tone="bone" /> : null}
-      <BrandStory content={content.brandStory} />
+      <CategorySwitcher items={content.categories.items} heading={content.categories.heading} shopLabel={content.categories.shopLabel} />
+
+      {/* ── Women ── */}
+      <CollectionSection id="collection-women" content={content.featuredCollections.women} tone="women" />
+      {party.length ? <ProductShowcase id="party-title" content={showcase.party} empty={showcase.empty} products={party} /> : null}
+      {casual.length ? <ProductShowcase id="casual-title" content={showcase.casual} empty={showcase.empty} products={casual} tone="bone" /> : null}
+
       <PromoBanner content={content.promo} />
+
+      {/* ── Girls / Kids ── */}
+      <CollectionSection id="collection-girls" content={content.featuredCollections.girls} reverse tone="girls" />
+      {girlsParty.length ? <ProductShowcase id="girls-party-title" content={showcase.girlsParty} empty={showcase.empty} products={girlsParty} /> : null}
+      {girlsCasual.length ? <ProductShowcase id="girls-casual-title" content={showcase.girlsCasual} empty={showcase.empty} products={girlsCasual} tone="girls" /> : null}
+
+      {!hasProducts ? <ProductShowcase id="shop-title" content={showcase.shop} empty={showcase.empty} products={[]} /> : null}
+      {/* Featured / sale / best sellers appear only when the team has flagged pieces or real sales exist. */}
+      {featured.length ? <ProductShowcase id="featured-title" content={showcase.featured} empty={showcase.empty} products={featured} tone="bone" /> : null}
+      {sale.length ? <ProductShowcase id="sale-title" content={showcase.sale} empty={showcase.empty} products={sale} /> : null}
+      {bestSellers.length ? <ProductShowcase id="best-sellers-title" content={showcase.bestSellers} empty={showcase.empty} products={bestSellers} tone="bone" /> : null}
+
+      <BrandStory content={content.brandStory} />
       <Lookbook content={content.lookbook} socialLink={instagram} />
     </>
   );

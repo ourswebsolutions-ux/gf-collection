@@ -11,12 +11,19 @@ const skuPart = (value) => value.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "-"
 
 export const emptyVariant = () => ({ id: undefined, sku: "", size: "", color: "", colorHex: "", priceOverride: "", stock: 0 });
 
+// Size ranges per department. Sizes are free text, so any other range still works
+// (e.g. "Free size", "0-3M", 28–36); presets only fill the generator.
+export const SIZE_PRESETS = [
+  { id: "women", label: "Women · XS–XXL", sizes: ["XS", "S", "M", "L", "XL", "XXL"] },
+  { id: "girls", label: "Girls · 2Y–12Y", sizes: ["2Y", "3Y", "4Y", "5Y", "6Y", "7Y", "8Y", "9Y", "10Y", "11Y", "12Y"] },
+];
+
 /**
  * Variant rows (size / colour / hex / SKU / price override / stock) with a
- * combination generator. Size and colour may be blank (perfumes, watches…).
+ * combination generator and Women/Girls size presets. Size and colour may be blank (one-size pieces).
  * Duplicate combinations and SKUs are highlighted before the server rejects them.
  */
-export function VariantsEditor({ variants, onChange, errors = {}, baseSku }) {
+export function VariantsEditor({ variants, onChange, errors = {}, baseSku, department = null }) {
   const [sizesInput, setSizesInput] = useState("");
   const [colorsInput, setColorsInput] = useState("");
 
@@ -66,16 +73,33 @@ export function VariantsEditor({ variants, onChange, errors = {}, baseSku }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <details className="border border-line bg-bone/40 px-4 py-3">
-        <summary className="cursor-pointer text-sm font-medium">Generate combinations</summary>
-        <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+      <details className="border border-line bg-bone/40 px-4 py-3" open={variants.length <= 1 && !variants[0]?.sku ? true : undefined}>
+        <summary className="cursor-pointer text-sm font-medium">Generate size & colour combinations</summary>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-mute">Size presets:</span>
+          {SIZE_PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => setSizesInput(preset.sizes.join(", "))}
+              className={cn(
+                "h-9 border px-3 text-xs transition-colors",
+                preset.id === department ? "border-ink bg-ink text-paper hover:bg-ink-soft" : "border-line bg-paper hover:border-ink",
+              )}
+            >
+              {preset.label}
+              {preset.id === department ? <span className="sr-only"> (recommended for this department)</span> : null}
+            </button>
+          ))}
+        </div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
           <label className="flex flex-col gap-1.5 text-xs font-medium">
             Sizes (comma separated)
-            <input value={sizesInput} onChange={(event) => setSizesInput(event.target.value)} placeholder="S, M, L, XL" className={cn(CELL, "border-line")} />
+            <input value={sizesInput} onChange={(event) => setSizesInput(event.target.value)} placeholder={department === "girls" ? "2Y, 3Y, 4Y, 5Y" : "XS, S, M, L, XL"} className={cn(CELL, "border-line")} />
           </label>
           <label className="flex flex-col gap-1.5 text-xs font-medium">
             Colours (name and optional hex)
-            <input value={colorsInput} onChange={(event) => setColorsInput(event.target.value)} placeholder="Black #0B0B0A, White #FFFFFF" className={cn(CELL, "border-line")} />
+            <input value={colorsInput} onChange={(event) => setColorsInput(event.target.value)} placeholder="Black #1C1A17, Blush #E8C4C0" className={cn(CELL, "border-line")} />
           </label>
           <Button variant="secondary" size="sm" onClick={generate} disabled={!sizesInput.trim() && !colorsInput.trim()}>
             Add combinations

@@ -1,4 +1,4 @@
-// 4 BRO — database schema (MySQL / MariaDB via Prisma)
+// GF Collection — database schema (MySQL / MariaDB via Prisma)
 //
 // Conventions
 // - Primary keys are CUIDs (non-sequential, safe to expose in URLs).
@@ -169,7 +169,8 @@ model Address {
 // Catalogue
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Two-level tree: departments (parentId = NULL) and their subcategories.
+/// Two-level tree: departments (parentId = NULL, e.g. Women, Kids) and their categories
+/// (e.g. Women → Fancy / Party Wear, Casual). See prisma/seed.mjs.
 /// Cycle / depth rules are enforced in src/services/categoryService.js;
 /// a CHECK constraint additionally forbids parentId = id.
 model Category {
@@ -230,6 +231,9 @@ model Product {
   /// Denormalised total of variant stock, maintained by productService.
   stock            Int           @default(0) @db.UnsignedInt
   featured         Boolean       @default(false)
+  /// Legacy column from the previous store's "New Arrivals" collection. No longer read or
+  /// written by the application; retained (with its index) so existing databases need no
+  /// destructive migration. Safe to drop in a future migration.
   newArrival       Boolean       @default(false)
   bestSeller       Boolean       @default(false)
   onSale           Boolean       @default(false)
@@ -296,7 +300,8 @@ model ProductVariant {
   id            String   @id @default(cuid())
   productId     String
   sku           String   @unique @db.VarChar(64)
-  /// NULL when size does not apply (perfume, watch…).
+  /// Free-text size label — letter sizes for Women (XS–XXL), age sizes for Kids (2Y–12Y);
+  /// NULL when size does not apply (one-size pieces).
   size          String?  @db.VarChar(20)
   /// NULL when colour does not apply.
   color         String?  @db.VarChar(40)
@@ -394,7 +399,7 @@ model SavedItem {
 
 model Order {
   id          String      @id @default(cuid())
-  /// Human-friendly reference shown to customers, e.g. 4B-20261002-7KQ2M.
+  /// Human-friendly reference shown to customers, e.g. GF-20261002-7KQ2MX (older orders: 4BRO-…).
   orderNumber String      @unique @db.VarChar(32)
   /// Nullable: guest orders, and history survives account deletion (SetNull).
   userId      String?

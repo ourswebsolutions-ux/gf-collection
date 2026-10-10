@@ -159,27 +159,58 @@ export function FilterPanel({ state, facets, onChange, displayCurrency, usdRate 
   const materials = [...new Set([...facets.materials, ...state.material])];
   const highlights = [
     { key: "sale", label: t("filters.onSale"), count: facets.flags?.onSale },
-    { key: "new", label: t("filters.newArrival"), count: facets.flags?.newArrival },
     { key: "best", label: t("filters.bestSeller"), count: facets.flags?.bestSeller },
     { key: "featured", label: t("filters.featured"), count: facets.flags?.featured },
   ].filter((item) => item.count > 0 || state.flags.includes(item.key));
 
+  const departments = facets.departments ?? [];
+  // Category rows, grouped under their department when several departments are listed.
+  const groups = [];
+  for (const sub of facets.subcategories) {
+    const last = groups.at(-1);
+    if (last && last.department === sub.department) last.items.push(sub);
+    else groups.push({ department: sub.department, items: [sub] });
+  }
+
   return (
     <div className="flex flex-col">
-      {facets.subcategories.length ? (
-        <Group id="filter-category" title={t("filters.category")} count={state.sub.length}>
-          {facets.subcategories.map((sub) => (
-            <CheckRow key={sub.slug} label={sub.name} count={sub.count} checked={state.sub.includes(sub.slug)} disabled={!sub.count && !state.sub.includes(sub.slug)} onChange={() => set({ sub: toggle(state.sub, sub.slug) })} />
-          ))}
+      {departments.length > 1 || state.dept.length ? (
+        <Group id="filter-department" title={t("filters.department")} count={state.dept.length}>
+          <div className="grid grid-cols-2 gap-2">
+            {departments.map((department) => {
+              const active = state.dept.includes(department.slug);
+              return (
+                <button
+                  key={department.slug}
+                  type="button"
+                  aria-pressed={active}
+                  disabled={!department.count && !active}
+                  // Changing department resets categories so a stale category can never hide every result.
+                  onClick={() => set({ dept: toggle(state.dept, department.slug), sub: [] })}
+                  className={cn(
+                    "flex min-h-12 flex-col items-start justify-center gap-0.5 border px-3.5 py-2 text-start transition-[background-color,color,border-color] duration-200 active:scale-[0.98] disabled:opacity-40",
+                    active ? "border-ink bg-ink text-paper" : "border-line hover:border-ink",
+                  )}
+                >
+                  <span className="headline text-lg leading-none">{department.name}</span>
+                  <span className={cn("text-[0.6875rem] tabular-nums", active ? "text-paper/70" : "text-mute")}>{t(department.count === 1 ? "collection.piece" : "collection.pieces", { count: department.count })}</span>
+                </button>
+              );
+            })}
+          </div>
         </Group>
       ) : null}
 
-      {facets.genders.length > 1 || state.gender.length ? (
-        <Group id="filter-gender" title={t("filters.gender")} count={state.gender.length}>
-          {facets.genders.map((gender) => {
-            const value = gender.value.toLowerCase();
-            return <CheckRow key={value} label={t(`filters.genders.${value}`)} count={gender.count} checked={state.gender.includes(value)} onChange={() => set({ gender: toggle(state.gender, value) })} />;
-          })}
+      {facets.subcategories.length ? (
+        <Group id="filter-category" title={t("filters.category")} count={state.sub.length}>
+          {groups.map((group) => (
+            <div key={group.department ?? "all"} className={cn(groups.length > 1 && "mb-2")}>
+              {groups.length > 1 && group.department ? <p className="eyebrow mb-1 mt-2 !text-[0.625rem] text-gold-deep">{group.department}</p> : null}
+              {group.items.map((sub) => (
+                <CheckRow key={sub.slug} label={sub.name} count={sub.count} checked={state.sub.includes(sub.slug)} disabled={!sub.count && !state.sub.includes(sub.slug)} onChange={() => set({ sub: toggle(state.sub, sub.slug) })} />
+              ))}
+            </div>
+          ))}
         </Group>
       ) : null}
 

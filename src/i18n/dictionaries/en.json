@@ -1,13 +1,10 @@
 {
   "brand": {
-    "tagline": "Create Your Legacy"
+    "tagline": "Elegance for Every Generation",
+    "departments": "Women · Girls"
   },
   "nav": {
-    "men": "Men",
     "women": "Women",
-    "kids": "Kids",
-    "accessories": "Accessories",
-    "newArrivals": "New Arrivals",
     "sale": "Sale",
     "search": "Search",
     "account": "Account",
@@ -18,11 +15,13 @@
     "openMenu": "Open menu",
     "allOf": "All {name}",
     "whatsapp": "Chat on WhatsApp",
-    "watches": "Watches",
-    "perfumes": "Perfumes",
-    "handbags": "Hand Bags",
-    "bags": "Bags",
-    "language": "Language"
+    "language": "Language",
+    "womenParty": "Fancy / Party Wear",
+    "womenCasual": "Casual Dresses",
+    "shopAll": "Shop All",
+    "girls": "Girls / Kids",
+    "girlsParty": "Girls' Fancy / Party Wear",
+    "girlsCasual": "Girls' Casual Dresses"
   },
   "common": {
     "shopNow": "Shop now",
@@ -31,7 +30,6 @@
     "soldOut": "Sold out",
     "lowStock": "Low stock",
     "inStock": "In stock",
-    "new": "New",
     "bestSeller": "Best seller",
     "close": "Close",
     "loading": "Loading",
@@ -56,7 +54,6 @@
     "quickView": "Quick view",
     "viewDetails": "View details",
     "badge": {
-      "new": "New",
       "bestSeller": "Best seller",
       "sale": "Sale",
       "soldOut": "Sold out",
@@ -83,12 +80,13 @@
     "addToBag": "Add to bag",
     "orderingSoon": "Online ordering opens soon.",
     "askWhatsapp": "Ask on WhatsApp",
-    "whatsappMessage": "Hello 4 BRO, I'm interested in the {name}.",
+    "whatsappMessage": "Hello GF Collection, I'm interested in the {name}.",
     "addFavorite": "Add {name} to favourites",
     "removeFavorite": "Remove {name} from favourites",
     "chargedInPkr": "Prices are charged in PKR. USD amounts are approximate.",
     "related": "You may also like",
-    "relatedMore": "More from {category}"
+    "relatedMore": "More from {category}",
+    "sizeGuide": "Size guide"
   },
   "gallery": {
     "previous": "Previous image",
@@ -104,18 +102,18 @@
     "pieces": "{count} pieces",
     "piece": "{count} piece",
     "arrivingSoon": "Arriving soon",
-    "arrivingSoonText": "This edit is being prepared. Explore the latest arrivals in the meantime.",
-    "shopNewArrivals": "Shop new arrivals",
+    "arrivingSoonText": "This edit is being prepared. Explore the full collection in the meantime.",
     "all": "All",
     "previousPage": "Previous",
     "nextPage": "Next",
     "pageOf": "Page {page} of {total}",
-    "pagination": "Pagination"
+    "pagination": "Pagination",
+    "shopAll": "Shop the collection"
   },
   "search": {
     "title": "Search",
     "label": "Search products",
-    "placeholder": "Search 4 BRO",
+    "placeholder": "Search GF Collection",
     "clear": "Clear",
     "recent": "Recent searches",
     "clearAll": "Clear all",
@@ -129,7 +127,7 @@
     "unavailable": "Search is unavailable",
     "unavailableHint": "We could not load results. Please try again.",
     "prompt": "What are you looking for?",
-    "promptHint": "Search by product name, category or department.",
+    "promptHint": "Search by dress name, category or department — Women or Girls / Kids.",
     "findPiece": "Find a piece",
     "resultsFor": "Results for “{query}”",
     "categories": "Categories",
@@ -150,7 +148,6 @@
     "inStock": "In stock only",
     "highlights": "Highlights",
     "onSale": "On sale",
-    "newArrival": "New arrivals",
     "bestSeller": "Best sellers",
     "featured": "Featured",
     "clearAll": "Clear all",
@@ -166,14 +163,14 @@
     "from": "From",
     "to": "To",
     "genders": {
-      "men": "Men",
       "women": "Women",
-      "kids": "Kids",
+      "kids": "Girls / Kids",
       "unisex": "Unisex"
     },
     "open": "Open filters",
     "applyPrice": "Apply price",
-    "apply": "Apply filters"
+    "apply": "Apply filters",
+    "department": "Department"
   },
   "sort": {
     "label": "Sort by",
@@ -185,50 +182,10 @@
     "name": "Name: A–Z"
   },
   "collectionCopy": {
-    "men": {
-      "title": "Men",
-      "eyebrow": "Department",
-      "description": "Tailoring, outerwear and considered essentials for every day."
-    },
     "women": {
       "title": "Women",
       "eyebrow": "Department",
-      "description": "Sharp tailoring, fluid trousers and pieces that move with you."
-    },
-    "kids": {
-      "title": "Kids",
-      "eyebrow": "Department",
-      "description": "Smart, comfortable pieces for the next generation."
-    },
-    "accessories": {
-      "title": "Accessories",
-      "eyebrow": "Department",
-      "description": "Watches, perfumes, hand bags and bags to complete the look."
-    },
-    "watches": {
-      "title": "Watches",
-      "eyebrow": "Accessories",
-      "description": "Timepieces chosen for character and everyday wear."
-    },
-    "perfumes": {
-      "title": "Perfumes",
-      "eyebrow": "Accessories",
-      "description": "Fragrances with warmth and presence."
-    },
-    "handbags": {
-      "title": "Hand Bags",
-      "eyebrow": "Accessories",
-      "description": "Structured and soft hand bags in fine leather."
-    },
-    "bags": {
-      "title": "Bags",
-      "eyebrow": "Accessories",
-      "description": "Holdalls, satchels and carry-alls built for movement."
-    },
-    "new-arrivals": {
-      "title": "New Arrivals",
-      "eyebrow": "Just in",
-      "description": "The latest pieces across every department."
+      "description": "Fancy and party wear for every celebration, and effortless casual dresses for every day."
     },
     "best-sellers": {
       "title": "Best Sellers",
@@ -244,10 +201,40 @@
       "title": "Featured",
       "eyebrow": "Curated",
       "description": "Pieces our team is wearing and recommending right now."
+    },
+    "shop": {
+      "title": "Shop All",
+      "eyebrow": "Women & Girls",
+      "description": "Every dress in the collection — party wear and casual dresses for women and girls, in one place."
+    },
+    "women-fancy-party-wear": {
+      "title": "Fancy / Party Wear",
+      "eyebrow": "Women",
+      "description": "Party, formal, wedding and evening wear — luxurious outfits for the occasions that matter."
+    },
+    "women-casual": {
+      "title": "Casual Dresses",
+      "eyebrow": "Women",
+      "description": "Comfortable, modern casual dresses for every day — easy to wear, beautifully made."
+    },
+    "girls": {
+      "title": "Girls / Kids",
+      "eyebrow": "Department",
+      "description": "Party, fancy and casual dresses for girls aged 2 to 12 — comfortable, beautifully finished and made to twirl in."
+    },
+    "girls-fancy-party-wear": {
+      "title": "Girls' Fancy / Party Wear",
+      "eyebrow": "Girls / Kids",
+      "description": "Tulle, satin and lace dresses for birthdays, weddings, Eid and every celebration."
+    },
+    "girls-casual": {
+      "title": "Girls' Casual Dresses",
+      "eyebrow": "Girls / Kids",
+      "description": "Soft cotton sundresses and everyday dresses made for play, school holidays and family days out."
     }
   },
   "announcement": {
-    "message": "New season — Men, Women, Kids & Accessories"
+    "message": "Women & Girls — fancy, party and casual dresses"
   },
   "header": {
     "language": "Language",
@@ -279,9 +266,9 @@
     "welcomeBack": "Welcome back",
     "signIn": "Sign in",
     "signingIn": "Signing in",
-    "newHere": "New to 4 BRO?",
+    "newHere": "New to GF Collection?",
     "createAccount": "Create an account",
-    "join": "Join 4 BRO",
+    "join": "Join GF Collection",
     "createTitle": "Create account",
     "creating": "Creating account",
     "haveAccount": "Already have an account?",
@@ -402,7 +389,7 @@
     "eyebrow": "Your favourites",
     "empty": "Your wishlist is empty",
     "emptyText": "Tap the heart on any piece to keep it here.",
-    "discover": "Discover new arrivals",
+    "discover": "Discover the collection",
     "added": "Added to your wishlist",
     "removed": "Removed from your wishlist",
     "addToBag": "Add to bag",
@@ -491,14 +478,14 @@
     "limit": "You can save up to {count} addresses."
   },
   "emails": {
-    "resetSubject": "Reset your 4 BRO password",
+    "resetSubject": "Reset your GF Collection password",
     "greeting": "Hello {name},",
-    "resetIntro": "We received a request to reset the password for your 4 BRO account. Use the link below within 1 hour to choose a new password.",
+    "resetIntro": "We received a request to reset the password for your GF Collection account. Use the link below within 1 hour to choose a new password.",
     "resetButton": "RESET PASSWORD",
     "resetIgnore": "If you did not ask for this, you can ignore this email — your password will not change."
   },
   "footer": {
-    "about": "Premium fashion and lifestyle for men, women and kids — with accessories to complete every look.",
+    "about": "Premium dresses for women and girls — fancy and party wear for every occasion, and elegant casual dresses for every day.",
     "contact": "Contact",
     "contactUs": "Contact us",
     "social": "Social media",
@@ -511,11 +498,7 @@
       "company": "Company"
     },
     "links": {
-      "men": "Men",
       "women": "Women",
-      "kids": "Kids",
-      "accessories": "Accessories",
-      "newArrivals": "New Arrivals",
       "sale": "Sale",
       "myAccount": "My Account",
       "orders": "Orders",
@@ -528,9 +511,15 @@
       "exchange": "Exchange",
       "sizeGuide": "Size Guide",
       "faqs": "FAQs",
-      "about": "About 4 BRO",
+      "about": "About GF Collection",
       "privacy": "Privacy Policy",
-      "terms": "Terms & Conditions"
+      "terms": "Terms & Conditions",
+      "womenParty": "Fancy / Party Wear",
+      "womenCasual": "Casual Dresses",
+      "shopAll": "Shop All",
+      "girls": "Girls / Kids",
+      "girlsParty": "Girls' Fancy / Party Wear",
+      "girlsCasual": "Girls' Casual Dresses"
     }
   },
   "checkout": {
@@ -659,7 +648,7 @@
     "another": "Track another order"
   },
   "notify": {
-    "brand": "4 BRO — CREATE YOUR LEGACY",
+    "brand": "GF COLLECTION — ELEGANCE FOR EVERY GENERATION",
     "placedTitle": "Your order has been placed.",
     "placedText": "Thank you — we have received your order and will confirm it shortly.",
     "paymentTitle": "Payment received.",
@@ -682,14 +671,14 @@
     "deliveryTbc": "Delivery fee to be confirmed",
     "tracking": "Tracking",
     "track": "Track your order",
-    "thanks": "Thank you for choosing 4 BRO.",
-    "tagline": "CREATE YOUR LEGACY",
-    "subjectPlaced": "4 BRO Order Confirmation — #{number}",
-    "subjectStatus": "Your 4 BRO order #{number} — {status}",
-    "subjectPayment": "Payment received — 4 BRO order #{number}",
+    "thanks": "Thank you for choosing GF Collection.",
+    "tagline": "ELEGANCE FOR EVERY GENERATION",
+    "subjectPlaced": "GF Collection Order Confirmation — #{number}",
+    "subjectStatus": "Your GF Collection order #{number} — {status}",
+    "subjectPayment": "Payment received — GF Collection order #{number}",
     "emailGreeting": "Dear {name},",
     "emailFooter": "Questions about your order? Reply to this email or message us on WhatsApp.",
-    "emailRights": "© {year} 4 BRO. All rights reserved.",
+    "emailRights": "© {year} GF Collection. All rights reserved.",
     "qty": "Qty {count}",
     "subtotal": "Subtotal",
     "deliverTo": "Delivery address"
@@ -699,103 +688,92 @@
   },
   "home": {
     "hero": {
-      "subtitle": "Premium fashion and lifestyle — considered pieces for every chapter.",
-      "cta": "Shop now",
-      "secondary": "Explore accessories",
-      "alt": "Hooded figure silhouetted against a stormy evening sky"
+      "eyebrow": "Women & Girls Fashion House",
+      "subtitle": "Fancy and party wear, effortless casual dresses and beautifully made dresses for girls — premium pieces for every occasion, chosen with care.",
+      "ctaWomen": "Shop Women",
+      "ctaGirls": "Shop Girls",
+      "womenCaption": "Party wear · Casual dresses",
+      "girlsCaption": "Party wear · Casual dresses",
+      "womenAlt": "Woman in a maroon tulle ball gown with rosette appliqués",
+      "girlsAlt": "Girl in a scarlet ruffled party dress and floral crown"
     },
-    "departments": {
-      "heading": "Shop by department",
+    "categories": {
+      "heading": "Shop by category",
       "shop": "Shop",
       "alts": {
-        "men": "Man in tailored black and white walking through a studio set",
-        "women": "Woman in an ivory suit photographed in black and white",
-        "kids": "Young boy in a cream jacket against a black backdrop",
-        "accessories": "Watch with a cream dial and brown strap on black"
+        "party": "Woman in a burgundy satin mermaid gown",
+        "casual": "Woman in a white tiered cotton maxi dress",
+        "girlsParty": "Girl in an ivory tulle gown with lace sleeves",
+        "girlsCasual": "Girl in a sunshine yellow sundress"
       }
-    },
-    "men": {
-      "title": "The Modern Uniform",
-      "description": "Tailoring that relaxes, outerwear that layers and essentials cut with intent. Built around a few pieces you will reach for again and again.",
-      "cta": "Shop men",
-      "altMain": "Man in an open black suit jacket against a pale studio wall",
-      "altDetail": "Man in a brown suede jacket seen from behind"
     },
     "women": {
-      "title": "Quiet Confidence",
-      "description": "Sharp shoulders, fluid trousers and a refined palette. Pieces that work as hard as you do and look effortless doing it.",
+      "title": "Grace for Every Occasion",
+      "description": "From glamorous gowns, lehengas and wedding-season looks to easy, elegant casual dresses — pieces chosen to make every woman feel her best.",
       "cta": "Shop women",
-      "altMain": "Woman in a grey wool coat photographed in black and white",
-      "altDetail": "Woman in a short black blazer and knee socks"
-    },
-    "kids": {
-      "title": "The Next Generation",
-      "description": "Smart, comfortable clothing for children — made for play, ready for occasions.",
-      "cta": "Shop kids",
-      "altMain": "Young boy in a patterned black shirt",
-      "altDetail": "Child in a teal puffer jacket and bucket hat walking outdoors"
-    },
-    "links": {
-      "shirts": "Shirts",
-      "jackets": "Jackets",
-      "dresses": "Dresses",
-      "tops": "Tops",
-      "hoodies": "Hoodies",
-      "tshirts": "T-Shirts",
-      "newIn": "New in"
-    },
-    "accessories": {
-      "title": "Beyond the Wardrobe",
-      "description": "The finishing pieces — timepieces, fragrance and leather goods selected to live alongside the collection.",
-      "cta": "Shop all accessories",
-      "explore": "Explore",
-      "alts": {
-        "watches": "Skeleton watch resting in a dark presentation box",
-        "perfumes": "Amber perfume bottle on draped gold satin",
-        "handbags": "Grey top-handle bag passed between two hands",
-        "bags": "Brown leather satchel on a wooden stool"
-      }
+      "altMain": "Woman in a navy beaded off-shoulder gown",
+      "altDetail": "Close-up of a silver sequin one-shoulder dress"
     },
     "story": {
       "eyebrow": "Our philosophy",
-      "body1": "4 BRO started with a simple belief: what you wear should carry intent. We design and select pieces with clean lines, careful construction and a palette that lasts beyond a single season.",
-      "body2": "From tailoring to fragrance, every piece is chosen to be worn often and kept for years — a wardrobe you build deliberately, one chapter at a time.",
+      "title": "Elegance for Every Generation",
+      "body1": "GF Collection began with a simple idea: the women of a family and the girls they dress deserve the same care, quality and sense of occasion.",
+      "body2": "We choose every dress — from gowns, lehengas and party wear to everyday casual dresses for women and girls — for its fabric, its finish and how it feels to wear.",
       "alt": "Woman in sunglasses and an oversized wool coat, black and white"
     },
     "promo": {
-      "eyebrow": "The latest drop",
-      "title": "Discover the Collection",
-      "cta": "Shop now",
-      "alt": "Model in a wide-sleeved black jacket, silhouetted against white"
+      "eyebrow": "The occasion edit",
+      "title": "Dressed for Every Celebration",
+      "cta": "Shop party wear",
+      "alt": "Woman in an embroidered red bridal lehenga beneath stone arches"
     },
     "lookbook": {
       "eyebrow": "Lookbook",
-      "title": "Worn Your Way",
-      "description": "Campaign stories, styling and the collection in motion.",
+      "title": "Moments Worth Dressing For",
+      "description": "Styling stories from the collection — for her and for her little one.",
       "follow": "Follow on {network}",
       "alts": [
-        "Woman in a navy jacket crouching under cool city light",
-        "Man in profile lit by a single blue light",
-        "Two people in dark tailoring by the sea, black and white",
-        "Two men in black leather and denim",
-        "Leather holdall resting on an empty road",
-        "Woman with hands in her hair, black and white portrait"
+        "Woman in an olive slip maxi dress in a sunflower field",
+        "Little girl in a blush tulle dress with puff sleeves",
+        "Woman in a black embellished cocktail dress",
+        "Girl in a navy star-print tulle dress on a yellow backdrop",
+        "Woman in a mustard and maroon embroidered lehenga",
+        "Girl in a white ruffled off-shoulder dress among tall grass"
       ]
     },
     "showcase": {
-      "newEyebrow": "Just in",
-      "newTitle": "New Arrivals",
-      "newText": "The latest pieces across men, women, kids and accessories — added as each drop lands.",
+      "partyTitle": "Fancy & Party Wear",
+      "partyText": "Statement dresses for parties, weddings and evenings out.",
+      "casualTitle": "Casual Dresses",
+      "casualText": "Easy, elegant pieces for every day.",
       "viewAll": "View all",
       "featuredEyebrow": "Curated",
       "featuredTitle": "Featured",
-      "featuredText": "Pieces our team is wearing and recommending right now.",
+      "featuredText": "Pieces our team is loving right now.",
+      "saleEyebrow": "Selected pieces",
+      "saleTitle": "On Sale",
+      "saleText": "Favourites from the collection at special prices.",
+      "saleAction": "Shop the sale",
       "bestEyebrow": "Most wanted",
       "bestTitle": "Best Sellers",
       "bestText": "The pieces customers return to most.",
       "bestAction": "Shop best sellers",
+      "shopEyebrow": "The collection",
+      "shopTitle": "Women & Girls",
+      "shopText": "The collection is being prepared — new pieces will appear here soon.",
       "emptyTitle": "Coming soon",
-      "emptyText": "New pieces are being prepared for this edit."
+      "emptyText": "New pieces are being prepared for this edit.",
+      "girlsPartyTitle": "Girls' Party Dresses",
+      "girlsPartyText": "Tulle, satin and lace for birthdays, weddings and Eid.",
+      "girlsCasualTitle": "Girls' Casual Dresses",
+      "girlsCasualText": "Soft cotton sundresses for playtime and days out."
+    },
+    "girls": {
+      "title": "Little Ladies, Beautifully Dressed",
+      "description": "Twirl-worthy party dresses for celebrations and soft, easy casual dresses for every day — made for girls aged 2 to 12.",
+      "cta": "Shop girls",
+      "altMain": "Girl twirling in an ivory tulle dress",
+      "altDetail": "Girl in a coral floral cotton dress picking flowers"
     }
   },
   "pages": {
@@ -804,23 +782,23 @@
       "whatsapp": "WhatsApp",
       "whatsappValue": "Chat with our team",
       "none": "Contact details are shared on request through your order confirmation.",
-      "orderHelp": "For questions about an order, include your order number (for example 4BRO-20261003-XXXXXX).",
+      "orderHelp": "For questions about an order, include your order number (for example GF-20261003-XXXXXX).",
       "phone": "Phone",
       "address": "Address"
     },
     "continue": "Continue shopping",
-    "updated": "These pages describe how the 4 BRO store works today. For anything not covered here, contact us and our team will help.",
+    "updated": "These pages describe how the GF Collection store works today. For anything not covered here, contact us and our team will help.",
     "about": {
-      "title": "About 4 BRO",
+      "title": "About GF Collection",
       "eyebrow": "Our story",
-      "intro": "Create Your Legacy.",
+      "intro": "Elegance for Every Generation.",
       "sections": [
         {
           "h": "",
           "p": [
-            "4 BRO is a fashion and lifestyle house for men, women and kids, with accessories chosen to complete every look — watches, perfumes, hand bags and bags.",
-            "We focus on clean lines, careful construction and a restrained palette: pieces designed to be worn often and kept for years rather than replaced each season.",
-            "The name is a promise between us and the people who wear what we make — to build something lasting together."
+            "GF Collection is a fashion house for women and girls: fancy and party wear for weddings, Eid, celebrations and evenings out, and elegant casual dresses for every day — for women and for girls aged 2 to 12.",
+            "We focus on fabric, finish and fit — dresses chosen to be worn, loved and kept, whether it is a statement gown or a little girl's favourite sundress.",
+            "Our name carries a promise to every family we dress: elegance for every generation."
           ]
         }
       ]
@@ -915,13 +893,13 @@
         {
           "h": "Sizes on each product",
           "p": [
-            "Every product page lists the sizes that piece is made in. Sizes that are currently unavailable are crossed out, and the exact stock is shown once you choose a size."
+            "Every product page lists the sizes that piece is made in. Women's pieces use letter sizes (XS, S, M, L, XL, XXL); girls' dresses use age sizes, for example 4Y for around four years. Sizes that are unavailable cannot be selected, and the exact stock is shown once you choose a size."
           ]
         },
         {
           "h": "Measuring",
           "p": [
-            "The most reliable guide is a similar piece you already own and like the fit of: compare chest, waist and length measured flat. Kids' sizes are listed by age."
+            "The most reliable guide is a similar piece you already own and like the fit of: compare chest, waist and length measured flat. For girls, choose by age, and take the next size up if they are between sizes."
           ]
         },
         {
@@ -1028,7 +1006,7 @@
     "terms": {
       "title": "Terms & Conditions",
       "eyebrow": "Legal",
-      "intro": "The terms that apply when you shop with 4 BRO.",
+      "intro": "The terms that apply when you shop with GF Collection.",
       "sections": [
         {
           "h": "Prices and currency",
@@ -1082,9 +1060,9 @@
   },
   "system": {
     "offline": "You appear to be offline. Some content may not load until your connection returns.",
-    "whatsappLabel": "Chat with 4 BRO on WhatsApp (opens in a new tab)",
+    "whatsappLabel": "Chat with GF Collection on WhatsApp (opens in a new tab)",
     "whatsappHover": "Chat with us",
-    "whatsappMessage": "Hello 4 BRO, I'd like some help.",
+    "whatsappMessage": "Hello GF Collection, I'd like some help.",
     "loadingProducts": "Loading products",
     "errorEyebrow": "Something went wrong",
     "errorTitle": "We could not load this page",

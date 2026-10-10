@@ -33,7 +33,7 @@ function lookup(dictionary, key) {
 }
 
 /**
- * Returns t("nav.men") for a locale. Missing keys fall back to English, then to
+ * Returns t("nav.women") for a locale. Missing keys fall back to English, then to
  * the key itself — so an incomplete translation never breaks a page.
  */
 export async function getTranslator(locale) {

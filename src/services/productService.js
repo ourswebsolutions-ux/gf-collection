@@ -71,7 +71,9 @@ const ORDER_BY = {
   name: [{ name: "asc" }],
 };
 
-const FLAG_FIELDS = ["newArrival", "bestSeller", "onSale", "featured"];
+// Storefront merchandising flags. (Product.newArrival is a retained legacy column from the
+// previous store: it is no longer read or written anywhere — see prisma/schema.prisma.)
+const FLAG_FIELDS = ["bestSeller", "onSale", "featured"];
 
 /**
  * Translate a storefront filter into a Prisma `where`. Every condition is ANDed,
@@ -79,6 +81,7 @@ const FLAG_FIELDS = ["newArrival", "bestSeller", "onSale", "featured"];
  *
  * @param {{
  *   categories?: string[],     // collection context: category OR its parent matches (department/subcategory slugs)
+ *   departments?: string[],    // user-selected department slugs, e.g. ["women", "girls"] (OR within)
  *   subcategories?: string[],  // user-selected subcategory slugs (OR within)
  *   gender?: string[], flag?: string, flags?: string[],
  *   popular?: boolean,         // best-seller flag OR real (non-cancelled) sales
@@ -95,6 +98,7 @@ export function buildProductWhere(filter = {}) {
 
   if (filter.base) and.push(buildProductWhere(filter.base));
   if (filter.categories?.length) and.push(inCategories(filter.categories));
+  if (filter.departments?.length) and.push(inCategories(filter.departments));
   if (filter.subcategories?.length) and.push(inCategories(filter.subcategories));
   if (filter.gender?.length) and.push({ gender: { in: filter.gender } });
   if (filter.popular) and.push({ OR: [{ bestSeller: true }, { orderItems: { some: { order: { status: { not: "CANCELLED" } } } } }] });
@@ -205,10 +209,25 @@ const omit = (filter, ...keys) => Object.fromEntries(Object.entries(filter).filt
  * Facet values within the current result context. Each facet is computed with all
  * active filters EXCEPT its own, so multi-select never leads to dead ends.
  * @param {object} filter  the full active filter (see buildProductWhere)
- * @param {{ parentCategoryId?: string, locale?: string }} options  department whose subcategories are offered
+ * @param {{ parentCategoryId?: string, departmentFacet?: boolean, locale?: string }} options
+ *   parentCategoryId → department page: its subcategories are offered;
+ *   departmentFacet  → cross-department listing: departments (Women | Girls) are offered, plus the
+ *                      subcategories of the selected departments (or of every department).
  */
-export async function getFilterFacets(filter = {}, { parentCategoryId, locale = DEFAULT_LOCALE } = {}) {
+export async function getFilterFacets(filter = {}, { parentCategoryId, departmentFacet = false, locale = DEFAULT_LOCALE } = {}) {
   const db = getDb();
+  const translations = translationsFor(locale);
+
+  // Departments = ACTIVE top-level categories (read from the database, never hard-coded).
+  const departmentRows = departmentFacet
+    ? await db.category.findMany({
+        where: { parentId: null, status: "ACTIVE" },
+        orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+        select: { id: true, name: true, slug: true, ...(translations && { translations }) },
+      })
+    : [];
+  const selectedDepartments = departmentRows.filter((row) => filter.departments?.includes(row.slug));
+  const parentIds = parentCategoryId ? [parentCategoryId] : (selectedDepartments.length ? selectedDepartments : departmentRows).map((row) => row.id);
   const variantWhere = (key) => ({ stock: { gt: 0 }, product: buildProductWhere(omit(filter, key)) });
 
   const [sizeRows, colorRows, materialRows, priceAgg, genderRows, subcategoryRows, flagCounts, inStockCount] = await Promise.all([
@@ -217,7 +236,7 @@ export async function getFilterFacets(filter = {}, { parentCategoryId, locale = 
     db.product.findMany({ where: { AND: [buildProductWhere(omit(filter, "materials")), { material: { not: null } }] }, select: { material: true }, distinct: ["material"], orderBy: { material: "asc" } }),
     db.product.aggregate({ where: buildProductWhere(omit(filter, "priceMin", "priceMax")), _min: { effectivePrice: true }, _max: { effectivePrice: true } }),
     db.product.groupBy({ by: ["gender"], where: buildProductWhere(omit(filter, "gender")), _count: { _all: true } }),
-    parentCategoryId
+    parentIds.length
       ? db.product.groupBy({ by: ["categoryId"], where: buildProductWhere(omit(filter, "subcategories")), _count: { _all: true } })
       : Promise.resolve([]),
     Promise.all(FLAG_FIELDS.map((flag) => db.product.count({ where: buildProductWhere({ ...filter, flags: [...new Set([...(filter.flags ?? []), flag])] }) }))),
@@ -225,17 +244,28 @@ export async function getFilterFacets(filter = {}, { parentCategoryId, locale = 
   ]);
 
   let subcategories = [];
-  if (parentCategoryId) {
+  if (parentIds.length) {
     const counts = new Map(subcategoryRows.map((row) => [row.categoryId, row._count._all]));
-    const translations = translationsFor(locale);
+    const parentName = new Map(departmentRows.map((row) => [row.id, localize(row, locale, ["name"]).name]));
     const children = await db.category.findMany({
-      where: { parentId: parentCategoryId, status: "ACTIVE" },
+      where: { parentId: { in: parentIds }, status: "ACTIVE" },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-      select: { id: true, name: true, slug: true, ...(translations && { translations }) },
+      select: { id: true, name: true, slug: true, parentId: true, ...(translations && { translations }) },
     });
+    // Keep the department order, then the admin-defined order within each department.
+    const order = new Map(parentIds.map((id, index) => [id, index]));
     subcategories = children
+      .sort((a, b) => order.get(a.parentId) - order.get(b.parentId))
       .map((child) => ({ ...localize(child, locale, ["name"]), count: counts.get(child.id) ?? 0 }))
-      .map(({ slug, name, count }) => ({ slug, name, count }));
+      .map(({ slug, name, count, parentId }) => ({ slug, name, count, department: parentName.get(parentId) ?? null }));
+  }
+
+  let departments = [];
+  if (departmentRows.length) {
+    const counts = await Promise.all(
+      departmentRows.map((row) => db.product.count({ where: buildProductWhere({ ...omit(filter, "departments"), departments: [row.slug] }) })),
+    );
+    departments = departmentRows.map((row, index) => ({ slug: row.slug, name: localize(row, locale, ["name"]).name, count: counts[index] }));
   }
 
   return {
@@ -244,6 +274,7 @@ export async function getFilterFacets(filter = {}, { parentCategoryId, locale = 
     materials: materialRows.map((row) => row.material),
     price: { min: priceAgg._min.effectivePrice?.toString() ?? null, max: priceAgg._max.effectivePrice?.toString() ?? null },
     genders: genderRows.map((row) => ({ value: row.gender, count: row._count._all })),
+    departments,
     subcategories,
     flags: Object.fromEntries(FLAG_FIELDS.map((flag, index) => [flag, flagCounts[index]])),
     inStock: inStockCount,
@@ -420,7 +451,7 @@ export async function setProductFlags(id, flags) {
   return getDb().product.update({
     where: { id: productId },
     data: { ...data, effectivePrice: effectivePriceOf({ ...product, onSale }) },
-    select: { id: true, featured: true, newArrival: true, bestSeller: true, onSale: true },
+    select: { id: true, featured: true, bestSeller: true, onSale: true },
   });
 }
 

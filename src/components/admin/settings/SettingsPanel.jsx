@@ -379,7 +379,7 @@ function SmtpSection({ overview, onDirtyChange }) {
     }
   };
 
-  const sender = `${form.values["smtp.fromName"] || f["smtp.fromName"].fallback || "4 BRO"} <${form.values["smtp.fromEmail"] || "sender@example.com"}>`;
+  const sender = `${form.values["smtp.fromName"] || f["smtp.fromName"].fallback || "GF Collection"} <${form.values["smtp.fromEmail"] || "sender@example.com"}>`;
 
   return (
     <form onSubmit={form.save} noValidate>
@@ -401,7 +401,7 @@ function SmtpSection({ overview, onDirtyChange }) {
           </div>
           <SettingInput form={form} field={f["smtp.username"]} placeholder="info.axoraweb@gmail.com" autoComplete="off" spellCheck={false} className="sm:col-span-2" />
           <SecretField field={f["smtp.password"]} value={form.secrets["smtp.password"] ?? ""} onChange={(v) => form.setSecret("smtp.password", v)} error={form.errors["smtp-password"]} onRemove={() => form.removeCredential(f["smtp.password"])} removing={form.busyKey === "smtp.password"} disabled={form.saving} hint="For Gmail use a Google App Password, not the account password." />
-          <SettingInput form={form} field={f["smtp.fromName"]} placeholder="4 BRO" maxLength={80} />
+          <SettingInput form={form} field={f["smtp.fromName"]} placeholder="GF Collection" maxLength={80} />
           <SettingInput form={form} field={f["smtp.fromEmail"]} type="email" placeholder="info.axoraweb@gmail.com" autoComplete="off" />
           <p className="-mt-2 text-xs text-mute sm:col-span-2">
             Emails are sent as <bdi dir="ltr" className="font-medium text-ink">{sender}</bdi>
@@ -443,8 +443,8 @@ function BusinessSection({ overview, onDirtyChange }) {
     <form onSubmit={form.save} noValidate>
       <Section id="business" title="Business contact" description="Shown in the footer, contact page, WhatsApp button and customer emails. Leave a field empty to use the environment value.">
         <div className="grid gap-6 sm:grid-cols-2">
-          <SettingInput form={form} field={f["business.name"]} placeholder="4 BRO" maxLength={80} />
-          <SettingInput form={form} field={f["business.websiteUrl"]} type="url" inputMode="url" placeholder="https://4broo.com" hint="Shown in customer emails. Page links and SEO use NEXT_PUBLIC_SITE_URL." />
+          <SettingInput form={form} field={f["business.name"]} placeholder="GF Collection" maxLength={80} />
+          <SettingInput form={form} field={f["business.websiteUrl"]} type="url" inputMode="url" placeholder="https://gfcollection.com" hint="Shown in customer emails. Page links and SEO use NEXT_PUBLIC_SITE_URL." />
           <SettingInput form={form} field={f["business.whatsappNumber"]} type="tel" inputMode="tel" placeholder="923001234567" hint="Customer chat button and contact links." />
           <SettingInput form={form} field={f["business.phone"]} type="tel" inputMode="tel" placeholder="923001234567" />
           <SettingInput form={form} field={f["business.supportEmail"]} type="email" placeholder="info.axoraweb@gmail.com" hint="Also the reply-to address of customer emails." className="sm:col-span-2" />

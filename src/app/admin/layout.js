@@ -7,7 +7,7 @@ import "../globals.css";
 // Admin is its own root layout (English, LTR, never indexed).
 export const metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: { default: "Admin", template: "%s | 4 BRO Admin" },
+  title: { default: "Admin", template: "%s | GF Collection Admin" },
   robots: { index: false, follow: false },
 };
 
